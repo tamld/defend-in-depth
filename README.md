@@ -15,6 +15,8 @@
 [![Node: ≥18](https://img.shields.io/badge/Node-%E2%89%A518-green.svg)](#)
 [![TypeScript: Strict](https://img.shields.io/badge/TypeScript-Strict-blue.svg)](#)
 
+**English** · [Tiếng Việt](README.vi.md)
+
 ---
 *AI agents generate 10x code. They also generate 10x hallucination.*<br/>
 **defend-in-depth intercepts errors before they reach Git history.**
@@ -63,6 +65,25 @@ AI coding agents (Cursor, Copilot, Claude Code, Windsurf, Codex) are **powerful 
 > 
 > The system **never** replaces human judgment. It reduces the noise so human judgment can be sharper.
 
+### Why Git-Level? (Deterministic vs. Dynamic Guardrails)
+
+The AI safety ecosystem is rich with runtime guardrails — tools like **Guardrails AI**, **NeMo Guardrails**, **LlamaFirewall**, and **Microsoft Agent Governance Toolkit** intercept agent behavior *while the model is reasoning*. These are powerful, but they are **dynamic adjustments**: every time a provider updates its model or a platform ships a new version, the guardrails must adapt.
+
+defend-in-depth takes a fundamentally different approach:
+
+> **We respect the full power of AI agents.** Let them think freely, operate freely, create freely — each platform in its own way. We don't interfere with that process.
+>
+> **We only verify the output.** When code is committed — the "exam is submitted" — it must meet standards.
+
+This is **deterministic governance**: whether you use GitHub, GitLab, Bitbucket, or any Git-compatible system, defend-in-depth stands as a reliable layer *before* agent output reaches the data layer.
+
+| Approach | Timing | Dependency | Adapts to model changes? |
+|:---|:---|:---|:---:|
+| Runtime guardrails | During reasoning | Provider-specific | Must update |
+| **defend-in-depth** | At commit time | **Git-universal** | **No change needed** |
+
+*Runtime guardrails protect while AI thinks. defend-in-depth protects when AI submits. Different layers, complementary roles.*
+
 ---
 
 ## 🏗️ Architecture
@@ -82,6 +103,10 @@ flowchart TD
     F --> G
     G -->|"Approved"| H["✅ Merged to main"]:::human
 ```
+
+<div align="center">
+  <img src="assets/social-infographic.svg" alt="defend-in-depth: Don't make AI smarter — Make AI behave better" width="800" />
+</div>
 
 ---
 
@@ -377,6 +402,21 @@ All files follow `YAML frontmatter + Markdown body` for universal agent compatib
 
 ## 10. vs. Alternatives
 
+### vs. Runtime AI Guardrails
+
+The AI safety ecosystem includes powerful tools that operate at the **runtime/API layer**:
+
+| Tool | Focus | Layer |
+|:---|:---|:---|
+| Guardrails AI / NeMo Guardrails | LLM input/output validation | Runtime API |
+| Microsoft Agent Governance Toolkit | Enterprise policy engine | Runtime actions |
+| LlamaFirewall (Meta) | Prompt injection, code injection defense | Runtime security |
+| LLM Guard (Protect AI) | Input/output sanitization | Runtime API |
+
+These tools govern AI **while it reasons**. defend-in-depth governs AI **when it commits code**. They are complementary layers — not competitors.
+
+### vs. Traditional Git Hooks
+
 | Feature | husky + lint-staged | commitlint | 🛡️ **defend-in-depth** |
 |:---|:---:|:---:|:---:|
 | Git hooks | ✅ | — | ✅ |
@@ -389,7 +429,7 @@ All files follow `YAML frontmatter + Markdown body` for universal agent compatib
 | **Evidence tagging** | ❌ | ❌ | ✅ |
 | Target audience | Human devs | Human devs | **AI agents + humans** |
 
-**Tagline:** *"The missing governance layer between AI agents and your Git repo."*
+> *Runtime guardrails protect while AI thinks. defend-in-depth protects when AI submits. Different layers, complementary roles.*
 
 ---
 
@@ -462,4 +502,4 @@ You are entering a **governed codebase** with prebuilt cognitive frameworks.
 
 ## License
 
-MIT © 2026 tamld
+[MIT](LICENSE) © 2026 tamld

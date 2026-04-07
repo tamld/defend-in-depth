@@ -29,7 +29,7 @@ Examples of unacceptable behavior:
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported to the project maintainers at **security@defend-in-depth.dev** (or via GitHub Issues).
+reported to the project maintainers at **ductam1828@gmail.com** (or via GitHub Issues).
 
 All complaints will be reviewed and investigated promptly and fairly.
 
