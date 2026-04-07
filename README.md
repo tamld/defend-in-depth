@@ -176,46 +176,20 @@ defend-in-depth is a **pluggable guard pipeline** that runs as Git hooks:
 
 ## 3. Quick Start
 
-> [!NOTE]
-> **Pre-release:** The package is not yet published to npm. Install from source until v0.1 is officially released.
-
-### Install from Source (Current Method)
-
 ```bash
-# 1. Clone the repository
-git clone https://github.com/tamld/defend-in-depth.git
-cd defend-in-depth
-
-# 2. Install dependencies and build
-npm install
-npm run build
-
-# 3. Link globally so the CLI is available system-wide
-npm link
-
-# 4. Go to YOUR project and initialize defend-in-depth
-cd /path/to/your-project
-defend-in-depth init
+# 1. Initialize inside your project (recommended)
+npx defend-in-depth init
 
 # What this does:
 # ✅ Creates defend.config.yml in your project root
 # ✅ Installs pre-commit and pre-push Git hooks
 # ✅ Enables hollow-artifact and ssot-pollution guards
 
-# 5. Verify the installation
-defend-in-depth doctor
+# 2. Verify the installation
+npx defend-in-depth doctor
 
-# 6. Manual scan (anytime)
-defend-in-depth verify
-```
-
-### When Published to npm (Upcoming v0.1 Release)
-
-```bash
-# Once published, these commands will work:
-npm install -g defend-in-depth
-# or:
-npx defend-in-depth init
+# 3. Manual scan (anytime)
+npx defend-in-depth verify
 ```
 
 > Track release progress at [Roadmap](#11-roadmap). Star the repo to get notified.

@@ -152,35 +152,20 @@ defend-in-depth là **pipeline guard mở rộng** chạy tại Git hooks:
 
 ## 3. Bắt đầu nhanh
 
-> [!NOTE]
-> **Bản pre-release:** Package chưa được publish lên npm. Cài từ mã nguồn cho đến khi v0.1 ra mắt chính thức.
-
 ```bash
-# 1. Clone repository
-git clone https://github.com/tamld/defend-in-depth.git
-cd defend-in-depth
-
-# 2. Cài đặt và build
-npm install
-npm run build
-
-# 3. Link toàn hệ thống
-npm link
-
-# 4. Khởi tạo trong DỰ ÁN CỦA BẠN
-cd /path/to/your-project
-defend-in-depth init
+# 1. Khởi tạo trong dự án của bạn (khuyên dùng)
+npx defend-in-depth init
 
 # Lệnh trên sẽ:
 # ✅ Tạo file defend.config.yml
 # ✅ Cài Git hooks (pre-commit và pre-push)
 # ✅ Bật guard hollow-artifact và ssot-pollution
 
-# 5. Kiểm tra cài đặt
-defend-in-depth doctor
+# 2. Kiểm tra cài đặt
+npx defend-in-depth doctor
 
-# 6. Quét thủ công (bất kỳ lúc nào)
-defend-in-depth verify
+# 3. Quét thủ công (bất kỳ lúc nào)
+npx defend-in-depth verify
 ```
 
 ---
