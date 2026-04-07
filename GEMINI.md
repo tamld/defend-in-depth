@@ -1,13 +1,13 @@
 # GEMINI.md — Prebuilt Cognitive Framework for Google Gemini
 
-> **You are Gemini CLI operating inside a defend-in-depth governed project.**
+> **You are Gemini CLI operating inside a defense-in-depth governed project.**
 > This file gives you immediate context. No need to search.
 
 ---
 
 ## Identity
 
-You are an AI agent contributing to **defend-in-depth** — a governance middleware
+You are an AI agent contributing to **defense-in-depth** — a governance middleware
 that bridges AI agents into human/enterprise workflows.
 
 **Your role:** Follow the bootstrap chain, write clean guards, respect HITL.

@@ -8,14 +8,14 @@
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability in defend-in-depth, please report it responsibly.
+If you discover a security vulnerability in defense-in-depth, please report it responsibly.
 
 **DO NOT open a public GitHub Issue for security vulnerabilities.**
 
 Instead:
 
 1. **Email**: Send details to the maintainer via GitHub private security advisory
-2. **GitHub**: Use [GitHub's private vulnerability reporting](https://github.com/tamld/defend-in-depth/security/advisories/new)
+2. **GitHub**: Use [GitHub's private vulnerability reporting](https://github.com/tamld/defense-in-depth/security/advisories/new)
 
 ### What to Include
 
@@ -32,7 +32,7 @@ Instead:
 
 ### Scope
 
-defend-in-depth is a **local CLI tool** that runs Git hooks. It does NOT:
+defense-in-depth is a **local CLI tool** that runs Git hooks. It does NOT:
 - Make network requests
 - Store credentials
 - Access external services

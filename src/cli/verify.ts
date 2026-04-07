@@ -4,9 +4,9 @@
  * Runs all enabled guards against staged files or specified paths.
  *
  * Usage:
- *   defend-in-depth verify                    # scan staged files
- *   defend-in-depth verify --files a.md b.ts  # scan specific files
- *   defend-in-depth verify --hook pre-commit   # called from hook
+ *   defense-in-depth verify                    # scan staged files
+ *   defense-in-depth verify --files a.md b.ts  # scan specific files
+ *   defense-in-depth verify --hook pre-commit   # called from hook
  */
 
 import { execSync } from "node:child_process";
@@ -52,7 +52,7 @@ export async function verify(
 
   // Output
   if (!hookMode) {
-    console.log("🛡️  defend-in-depth verify\n");
+    console.log("🛡️  defense-in-depth verify\n");
   }
 
   for (const result of verdict.results) {

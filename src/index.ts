@@ -1,13 +1,13 @@
 /**
- * defend-in-depth — Public API
+ * defense-in-depth — Public API
  *
  * Usage as library:
- *   import { DefendEngine, allBuiltinGuards } from "defend-in-depth";
+ *   import { DefendEngine, allBuiltinGuards } from "defense-in-depth";
  *
  * Usage as CLI:
- *   npx defend-in-depth init
- *   npx defend-in-depth verify
- *   npx defend-in-depth doctor
+ *   npx defense-in-depth init
+ *   npx defense-in-depth verify
+ *   npx defense-in-depth doctor
  */
 
 export { DefendEngine } from "./core/engine.js";

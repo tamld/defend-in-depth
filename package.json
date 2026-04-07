@@ -1,12 +1,12 @@
 {
-  "name": "defend-in-depth",
+  "name": "defense-in-depth",
   "version": "0.1.0",
   "description": "Git-based governance hooks for AI coding agents. Prevents hollow artifacts, SSoT pollution, and enforces commit/branch standards.",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "defend-in-depth": "dist/cli/index.js"
+    "defense-in-depth": "dist/cli/index.js"
   },
   "exports": {
     ".": {
@@ -32,7 +32,7 @@
     "governance",
     "ai-agents",
     "code-quality",
-    "defend-in-depth",
+    "defense-in-depth",
     "conventional-commits",
     "pre-commit",
     "pre-push",
@@ -43,7 +43,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tamld/defend-in-depth.git"
+    "url": "https://github.com/tamld/defense-in-depth.git"
   },
   "engines": {
     "node": ">=18.0.0"

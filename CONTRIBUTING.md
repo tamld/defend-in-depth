@@ -1,4 +1,4 @@
-# Contributing to defend-in-depth
+# Contributing to defense-in-depth
 
 Thank you for your interest in contributing! This project follows strict standards to maintain quality.
 
@@ -6,8 +6,8 @@ Thank you for your interest in contributing! This project follows strict standar
 
 ```bash
 # 1. Fork and clone
-git clone https://github.com/YOUR_USERNAME/defend-in-depth.git
-cd defend-in-depth
+git clone https://github.com/YOUR_USERNAME/defense-in-depth.git
+cd defense-in-depth
 
 # 2. Install dependencies
 npm install

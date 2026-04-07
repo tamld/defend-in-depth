@@ -1,7 +1,7 @@
 /**
- * Configuration loader for defend-in-depth.
+ * Configuration loader for defense-in-depth.
  *
- * Reads defend.config.yml from the project root.
+ * Reads defense.config.yml from the project root.
  * Falls back to sensible defaults if no config file exists.
  *
  * Pattern source: constitution.ts from AAOS (YAML config → merge defaults)
@@ -58,13 +58,13 @@ const DEFAULT_CONFIG: DefendConfig = {
 };
 
 const CONFIG_FILE_NAMES = [
-  "defend.config.yml",
+  "defense.config.yml",
   "defend.config.yaml",
   ".defendrc.yml",
 ];
 
 /**
- * Load configuration from defend.config.yml or return defaults.
+ * Load configuration from defense.config.yml or return defaults.
  */
 export function loadConfig(projectRoot: string): DefendConfig {
   for (const name of CONFIG_FILE_NAMES) {

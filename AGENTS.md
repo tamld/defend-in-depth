@@ -7,7 +7,7 @@
 
 ## Layer 0 — Identity (WHO this project is)
 
-**Project**: defend-in-depth
+**Project**: defense-in-depth
 **Type**: Open Source NPM Package (MIT)
 **Purpose**: Git-based governance hooks for AI coding agents
 **Parent**: Extracted from [AAOS](https://github.com/tamld/web-login-solo) (Autonomous Agent Operating System)
@@ -17,7 +17,7 @@
 ### What This Project IS
 - A lightweight governance middleware that runs as Git hooks
 - A pluggable guard pipeline that validates code before it reaches Git history
-- A cross-platform CLI tool (`npx defend-in-depth init/verify/doctor`)
+- A cross-platform CLI tool (`npx defense-in-depth init/verify/doctor`)
 - An extensibility framework via the `Guard` interface
 
 ### What This Project is NOT
@@ -67,7 +67,7 @@ These are non-negotiable. No PR, no contributor, no agent may violate:
 ## Layer 3 — Architecture Map
 
 ```
-defend-in-depth/
+defense-in-depth/
 ├── src/
 │   ├── core/               # Mandatory Pillars (engine, types, config)
 │   │   ├── types.ts        # Guard interface + future interfaces
@@ -91,7 +91,7 @@ defend-in-depth/
 ├── templates/              # Shipped templates
 ├── .agents/rules/          # Immutable consistency rules
 ├── .github/                # CI + issue/PR templates
-├── defend.config.yml       # User config (created by init)
+├── defense.config.yml       # User config (created by init)
 └── tests/                  # Test suite
 ```
 
@@ -103,7 +103,7 @@ This project follows a **federation model** with AAOS:
 
 ```mermaid
 flowchart LR
-    AAOS["🪐 AAOS (Parent)"] -->|"Push: proven guards,<br/>patterns, rules"| DID["🛡️ defend-in-depth (OSS)"]
+    AAOS["🪐 AAOS (Parent)"] -->|"Push: proven guards,<br/>patterns, rules"| DID["🛡️ defense-in-depth (OSS)"]
     DID -->|"Pull: community-contributed<br/>guards, improvements"| AAOS
     COMMUNITY["👥 Community"] -->|"PR: new guards,<br/>bug fixes, docs"| DID
 ```

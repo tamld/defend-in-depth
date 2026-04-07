@@ -2,7 +2,7 @@
 
 <img src="assets/icon.svg" width="120" alt="Defend in Depth Icon" />
 
-# defend-in-depth
+# defense-in-depth
 
 **Tầng quản trị trung gian giữa AI Agent và mã nguồn dự án**
 
@@ -19,13 +19,13 @@
 
 ---
 *AI Agent viết code nhanh gấp 10 lần. Nhưng cũng "ảo" gấp 10 lần.*<br/>
-**defend-in-depth chặn lỗi trước khi chúng kịp vào lịch sử Git.**
+**defense-in-depth chặn lỗi trước khi chúng kịp vào lịch sử Git.**
 ---
 
 </div>
 
 <div align="center">
-  <img src="assets/social-infographic-vi.svg" alt="defend-in-depth: Không cần AI thông minh hơn — Chỉ cần AI làm đúng hơn" width="800" />
+  <img src="assets/social-infographic-vi.svg" alt="defense-in-depth: Không cần AI thông minh hơn — Chỉ cần AI làm đúng hơn" width="800" />
 </div>
 
 ---
@@ -45,7 +45,7 @@ AI Agent (Cursor, Copilot, Claude Code, Windsurf, Codex) là **công cụ mạnh
 | 🔄 Kiểm tra cơ học lặp đi lặp lại | 🏗️ **Định hướng kiến trúc** |
 | 📋 Tuân theo kế hoạch có sẵn | 💡 **Chuyên môn lĩnh vực** |
 
-**defend-in-depth** là tầng trung gian giúp:
+**defense-in-depth** là tầng trung gian giúp:
 1. **Giảm "ảo giác" của AI** — bắt file rỗng, nội dung giả, hành vi lách luật
 2. **Tăng độ chính xác** — yêu cầu bằng chứng cho mọi kết quả
 3. **Tối ưu tự động hóa** — xử lý kiểm tra cơ học, nhường phần sáng tạo cho con người
@@ -55,20 +55,20 @@ AI Agent (Cursor, Copilot, Claude Code, Windsurf, Codex) là **công cụ mạnh
 
 Trên thị trường không thiếu các guardrail hoạt động ở tầng runtime — **Guardrails AI**, **NeMo Guardrails**, **LlamaFirewall**, **Microsoft Agent Governance Toolkit** — can thiệp vào hành vi Agent *ngay khi mô hình đang suy luận*. Chúng rất mạnh, nhưng là kiểu **điều chỉnh động**: mỗi lần nhà cung cấp cập nhật model hoặc nền tảng thay đổi phiên bản, guardrail cũng phải chạy theo để thích ứng.
 
-defend-in-depth chọn hướng tiếp cận khác:
+defense-in-depth chọn hướng tiếp cận khác:
 
 > **Tôn trọng toàn bộ sức mạnh AI Agent.** Cho phép chúng tự do suy nghĩ, tự do vận hành, tự do sáng tạo — mỗi nền tảng theo cách riêng. Chúng tôi không can thiệp vào quá trình đó.
 >
 > **Chỉ kiểm tra kết quả đầu ra.** Khi code được commit — "bài thi được nộp" — nó phải đạt chuẩn.
 
-Đây là **quản trị tất định**: dù dùng GitHub, GitLab, Bitbucket hay bất kỳ hệ thống Git nào, defend-in-depth luôn là lớp bổ trợ vững chắc *trước khi* kết quả của Agent chạm vào tầng dữ liệu hệ thống.
+Đây là **quản trị tất định**: dù dùng GitHub, GitLab, Bitbucket hay bất kỳ hệ thống Git nào, defense-in-depth luôn là lớp bổ trợ vững chắc *trước khi* kết quả của Agent chạm vào tầng dữ liệu hệ thống.
 
 | Cách tiếp cận | Thời điểm | Phụ thuộc | Cần cập nhật khi model đổi? |
 |:---|:---|:---|:---:|
 | Guardrail runtime | Trong lúc suy luận | Theo nhà cung cấp | Phải cập nhật |
-| **defend-in-depth** | Tại thời điểm commit | **Mọi hệ thống Git** | **Không cần** |
+| **defense-in-depth** | Tại thời điểm commit | **Mọi hệ thống Git** | **Không cần** |
 
-*Guardrail runtime bảo vệ khi AI đang suy nghĩ. defend-in-depth bảo vệ khi AI nộp bài. Hai tầng khác nhau, bổ sung cho nhau.*
+*Guardrail runtime bảo vệ khi AI đang suy nghĩ. defense-in-depth bảo vệ khi AI nộp bài. Hai tầng khác nhau, bổ sung cho nhau.*
 
 ---
 
@@ -81,7 +81,7 @@ flowchart TD
     classDef human fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d,font-weight:bold;
 
     A["🤖 AI Agent<br/>viết code"]:::agent --> B["📦 git commit"]
-    B --> C{"🛡️ defend-in-depth<br/>pre-commit hook"}:::guard
+    B --> C{"🛡️ defense-in-depth<br/>pre-commit hook"}:::guard
     C -->|"❌ CHẶN"| D["Agent tự sửa<br/>trước khi commit"]:::agent
     C -->|"⚠️ CẢNH BÁO"| E["Đánh dấu cho<br/>người duyệt"]
     C -->|"✅ ĐẠT"| F["Commit sạch"]
@@ -121,7 +121,7 @@ AI Agent tối ưu cho **sự hợp lý**, không phải **sự đúng đắn**.
 
 ## 2. Cách hoạt động
 
-defend-in-depth là **pipeline guard mở rộng** chạy tại Git hooks:
+defense-in-depth là **pipeline guard mở rộng** chạy tại Git hooks:
 
 ```
 ┌──────────────────────────────────────────────────┐
@@ -129,7 +129,7 @@ defend-in-depth là **pipeline guard mở rộng** chạy tại Git hooks:
 │                                                    │
 │  AI Code → [pre-commit] ──→ [pre-push]             │
 │                   │                │               │
-│              defend-in-depth  defend-in-depth      │
+│              defense-in-depth  defense-in-depth      │
 │                   │                │               │
 │              ┌────┴────┐     ┌────┴────┐          │
 │              │ Guards: │     │ Guards: │          │
@@ -154,18 +154,18 @@ defend-in-depth là **pipeline guard mở rộng** chạy tại Git hooks:
 
 ```bash
 # 1. Khởi tạo trong dự án của bạn (khuyên dùng)
-npx defend-in-depth init
+npx defense-in-depth init
 
 # Lệnh trên sẽ:
-# ✅ Tạo file defend.config.yml
+# ✅ Tạo file defense.config.yml
 # ✅ Cài Git hooks (pre-commit và pre-push)
 # ✅ Bật guard hollow-artifact và ssot-pollution
 
 # 2. Kiểm tra cài đặt
-npx defend-in-depth doctor
+npx defense-in-depth doctor
 
 # 3. Quét thủ công (bất kỳ lúc nào)
-npx defend-in-depth verify
+npx defense-in-depth verify
 ```
 
 ---
@@ -193,11 +193,11 @@ npx defend-in-depth verify
 | LlamaFirewall (Meta) | Chống prompt injection, code injection | Runtime security |
 | LLM Guard (Protect AI) | Lọc input/output | Runtime API |
 
-Các tool trên quản trị AI **trong lúc suy luận**. defend-in-depth quản trị AI **tại thời điểm commit code**. Hai tầng bổ sung nhau, không cạnh tranh.
+Các tool trên quản trị AI **trong lúc suy luận**. defense-in-depth quản trị AI **tại thời điểm commit code**. Hai tầng bổ sung nhau, không cạnh tranh.
 
 ### So với Git hooks truyền thống
 
-| Tính năng | husky | commitlint | 🛡️ **defend-in-depth** |
+| Tính năng | husky | commitlint | 🛡️ **defense-in-depth** |
 |:---|:---:|:---:|:---:|
 | Git hooks | ✅ | — | ✅ |
 | Kiểm tra format commit | — | ✅ | ✅ Tích hợp sẵn |
@@ -208,7 +208,7 @@ Các tool trên quản trị AI **trong lúc suy luận**. defend-in-depth quả
 | **Hệ sinh thái quản trị Agent** | ❌ | ❌ | ✅ |
 | Đối tượng phục vụ | Developer | Developer | **AI Agent + Developer** |
 
-> *Guardrail runtime bảo vệ khi AI đang suy nghĩ. defend-in-depth bảo vệ khi AI nộp bài. Hai tầng khác nhau, bổ sung cho nhau.*
+> *Guardrail runtime bảo vệ khi AI đang suy nghĩ. defense-in-depth bảo vệ khi AI nộp bài. Hai tầng khác nhau, bổ sung cho nhau.*
 
 ---
 

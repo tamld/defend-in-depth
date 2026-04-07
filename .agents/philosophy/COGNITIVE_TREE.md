@@ -5,7 +5,7 @@ version: 2.0.0
 enforcement: advisory
 ---
 
-# 🌳 COGNITIVE TREE — The Mindset of defend-in-depth
+# 🌳 COGNITIVE TREE — The Mindset of defense-in-depth
 
 > *"The tree's roots are invisible, but they determine whether the tree stands or falls."*
 
@@ -135,7 +135,7 @@ All three branches serve one trunk: **humans retain authority**.
 ```mermaid
 flowchart TD
     AI["🤖 AI Agent"] --> COLLECT["Collect artifacts<br/>Generate plans<br/>Execute mechanics"]
-    COLLECT --> GUARD["🛡️ defend-in-depth<br/>Mechanical validation"]
+    COLLECT --> GUARD["🛡️ defense-in-depth<br/>Mechanical validation"]
     GUARD --> HUMAN["👨‍💼 Human Decision<br/>Business logic<br/>Ground truth<br/>Architecture"]
     HUMAN -->|"Approve"| MERGE["✅ Merge"]
     HUMAN -->|"Reject"| FEEDBACK["↩️ Feedback loop"]
@@ -199,7 +199,7 @@ and produces field data that feeds back to the parent system (AAOS).
 
 ```mermaid
 flowchart LR
-    AAOS["AAOS (HQ)"] -->|"Seeds initial design"| DID["defend-in-depth (OSS)"]
+    AAOS["AAOS (HQ)"] -->|"Seeds initial design"| DID["defense-in-depth (OSS)"]
     DID -->|"Field data from\ncommunity usage"| AAOS
     DID -->|"Each version deepens\na cognitive branch"| LEARN["Lessons, Guards,\nPatterns"]
     LEARN -->|"FederationPayload"| AAOS

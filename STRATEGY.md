@@ -1,4 +1,4 @@
-# 📋 STRATEGY.md — Strategic Metadata for defend-in-depth
+# 📋 STRATEGY.md — Strategic Metadata for defense-in-depth
 
 > **For any agent reading this:** This document tells you WHERE this project is going,
 > WHAT has been decided, and HOW to contribute without conflicting with the plan.
@@ -7,12 +7,12 @@
 
 ## Mission
 
-**defend-in-depth** is a governance middleware layer that bridges AI coding agents
+**defense-in-depth** is a governance middleware layer that bridges AI coding agents
 into human/enterprise operational workflows.
 
 - **AI** handles: artifact generation, execution plans, mechanical checks
 - **Humans** handle: business logic, ground truth, architecture decisions
-- **defend-in-depth** handles: the gap between them (validation, enforcement, growth)
+- **defense-in-depth** handles: the gap between them (validation, enforcement, growth)
 
 ---
 

@@ -93,7 +93,7 @@ That's it. The engine discovers guards through this barrel export.
 npm run build
 
 # Run your guard specifically
-npx defend-in-depth verify --files "path/to/large-file.ts"
+npx defense-in-depth verify --files "path/to/large-file.ts"
 ```
 
 ## Full Contract Reference

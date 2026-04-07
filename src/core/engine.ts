@@ -2,7 +2,7 @@
  * Defend-in-Depth Engine
  *
  * The core pipeline runner:
- *   1. Load config (defend.config.yml)
+ *   1. Load config (defense.config.yml)
  *   2. Register guards
  *   3. Run each guard against context
  *   4. Aggregate into EngineVerdict

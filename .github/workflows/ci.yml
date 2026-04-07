@@ -38,7 +38,7 @@ jobs:
         run: npm test
 
       - name: Self-verify (dogfooding)
-        run: npx defend-in-depth verify || true
+        run: npx defense-in-depth verify || true
 
   lint:
     name: Lint & Type Check

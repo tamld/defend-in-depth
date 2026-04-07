@@ -2,7 +2,7 @@
  * Branch Naming Guard
  *
  * Enforces branch naming conventions.
- * Disabled by default — enable in defend.config.yml.
+ * Disabled by default — enable in defense.config.yml.
  *
  * Pattern source: AAOS rule-git-collaboration-guard.ts
  */

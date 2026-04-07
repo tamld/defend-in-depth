@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * defend-in-depth CLI
+ * defense-in-depth CLI
  *
  * Commands:
  *   init    — Install Git hooks into .git/hooks/
@@ -38,7 +38,7 @@ async function main(): Promise<void> {
 
     case "--version":
     case "-v":
-      console.log("defend-in-depth v0.1.0");
+      console.log("defense-in-depth v0.1.0");
       break;
 
     default:
@@ -50,10 +50,10 @@ async function main(): Promise<void> {
 
 function printUsage(): void {
   console.log(`
-🛡️  defend-in-depth — Git-based governance for AI coding agents
+🛡️  defense-in-depth — Git-based governance for AI coding agents
 
 Usage:
-  defend-in-depth <command> [options]
+  defense-in-depth <command> [options]
 
 Commands:
   init      Install Git hooks (pre-commit + pre-push) into your project
@@ -65,12 +65,12 @@ Options:
   --version Show version
 
 Examples:
-  npx defend-in-depth init
-  npx defend-in-depth verify
-  npx defend-in-depth verify --files src/app.ts docs/plan.md
-  npx defend-in-depth doctor
+  npx defense-in-depth init
+  npx defense-in-depth verify
+  npx defense-in-depth verify --files src/app.ts docs/plan.md
+  npx defense-in-depth doctor
 
-Learn more: https://github.com/tamld/defend-in-depth
+Learn more: https://github.com/tamld/defense-in-depth
 `);
 }
 

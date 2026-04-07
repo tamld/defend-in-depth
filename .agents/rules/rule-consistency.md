@@ -46,7 +46,7 @@ src/
 | Interfaces | `PascalCase` | `GuardResult`, `DefendConfig` |
 | Enums | `PascalCase` enum, `UPPER_CASE` values | `Severity.BLOCK` |
 | Config keys | `camelCase` | `hollowArtifact`, `minContentLength` |
-| CLI commands | `kebab-case` | `defend-in-depth verify` |
+| CLI commands | `kebab-case` | `defense-in-depth verify` |
 | Branches | `type/description` | `feat/add-new-guard` |
 | Commits | Conventional commits | `feat(guards): add secret-detection` |
 
@@ -74,7 +74,7 @@ Every guard MUST NOT:
 
 | Rule | Standard |
 |------|----------|
-| Config format | YAML only (`defend.config.yml`) |
+| Config format | YAML only (`defense.config.yml`) |
 | Config schema | Defined in `core/types.ts` |
 | Defaults | Every config option has a sensible default |
 | Deep merge | User values override defaults, missing values use defaults |

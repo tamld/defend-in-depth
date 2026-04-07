@@ -10,7 +10,7 @@ cognitive_branch: mechanism
 
 > **If it doesn't work on Windows, macOS, AND Linux — it doesn't ship.**
 
-defend-in-depth is a cross-platform tool. Every line of code, every path operation,
+defense-in-depth is a cross-platform tool. Every line of code, every path operation,
 every shell command must work identically on all three major operating systems.
 
 ---

@@ -2,7 +2,7 @@
  * CLI: init command
  *
  * Installs Git hooks (pre-commit, pre-push) into .git/hooks/
- * Creates defend.config.yml if it doesn't exist.
+ * Creates defense.config.yml if it doesn't exist.
  */
 
 import * as fs from "node:fs";
@@ -11,7 +11,7 @@ import { generatePreCommitHook } from "../hooks/pre-commit.js";
 import { generatePrePushHook } from "../hooks/pre-push.js";
 
 export async function init(projectRoot: string): Promise<void> {
-  console.log("🛡️  defend-in-depth init\n");
+  console.log("🛡️  defense-in-depth init\n");
 
   // 1. Check we're in a Git repo
   const gitDir = path.join(projectRoot, ".git");
@@ -33,23 +33,23 @@ export async function init(projectRoot: string): Promise<void> {
   const prePushPath = path.join(hooksDir, "pre-push");
   writeHook(prePushPath, generatePrePushHook(), "pre-push");
 
-  // 4. Create defend.config.yml if it doesn't exist
-  const configPath = path.join(projectRoot, "defend.config.yml");
+  // 4. Create defense.config.yml if it doesn't exist
+  const configPath = path.join(projectRoot, "defense.config.yml");
   if (!fs.existsSync(configPath)) {
     const templatePath = path.join(
       path.dirname(new URL(import.meta.url).pathname),
       "..",
       "..",
       "templates",
-      "defend.config.yml",
+      "defense.config.yml",
     );
 
     if (fs.existsSync(templatePath)) {
       fs.copyFileSync(templatePath, configPath);
-      console.log("  ✅ Created defend.config.yml (customize as needed)");
+      console.log("  ✅ Created defense.config.yml (customize as needed)");
     } else {
       // Inline minimal config
-      const minimalConfig = `# defend-in-depth configuration
+      const minimalConfig = `# defense-in-depth configuration
 version: "1.0"
 
 guards:
@@ -65,13 +65,13 @@ guards:
     enabled: false
 `;
       fs.writeFileSync(configPath, minimalConfig, "utf-8");
-      console.log("  ✅ Created defend.config.yml (customize as needed)");
+      console.log("  ✅ Created defense.config.yml (customize as needed)");
     }
   } else {
-    console.log("  ℹ  defend.config.yml already exists — skipping");
+    console.log("  ℹ  defense.config.yml already exists — skipping");
   }
 
-  console.log("\n✅ defend-in-depth initialized successfully!");
+  console.log("\n✅ defense-in-depth initialized successfully!");
   console.log("   Hooks installed. Your commits are now guarded.\n");
 }
 
@@ -79,13 +79,13 @@ function writeHook(hookPath: string, content: string, name: string): void {
   // Check if hook already exists and is not ours
   if (fs.existsSync(hookPath)) {
     const existing = fs.readFileSync(hookPath, "utf-8");
-    if (existing.includes("defend-in-depth")) {
+    if (existing.includes("defense-in-depth")) {
       fs.writeFileSync(hookPath, content, { mode: 0o755 });
       console.log(`  ✅ Updated ${name} hook`);
       return;
     }
     // Existing hook from another tool — append
-    const merged = existing + "\n\n# --- defend-in-depth ---\n" + content;
+    const merged = existing + "\n\n# --- defense-in-depth ---\n" + content;
     fs.writeFileSync(hookPath, merged, { mode: 0o755 });
     console.log(`  ✅ Appended ${name} hook (existing hook preserved)`);
     return;

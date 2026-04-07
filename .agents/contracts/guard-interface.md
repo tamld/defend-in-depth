@@ -47,7 +47,7 @@ interface GuardContext {
   /** Latest commit message (empty if no commits) */
   commitMessage: string;
 
-  /** Merged user config for this guard (from defend.config.yml) */
+  /** Merged user config for this guard (from defense.config.yml) */
   config: Record<string, unknown>;
 }
 ```

@@ -130,7 +130,7 @@ feat(guards): add YAML syntax validator
 
 - [ ] Title follows conventional commit format
 - [ ] Branch is up-to-date with `main`
-- [ ] All guards pass (`npx defend-in-depth verify`)
+- [ ] All guards pass (`npx defense-in-depth verify`)
 - [ ] Tests pass (`npm test`)
 - [ ] TypeScript compiles (`npx tsc --noEmit`)
 - [ ] No SSoT files modified (backlog, state, governance configs)
@@ -194,7 +194,7 @@ feat(guards): add YAML syntax validator
 
 ## 5. Git as Enforcement (Project-Specific)
 
-defend-in-depth uses Git hooks as its primary enforcement mechanism:
+defense-in-depth uses Git hooks as its primary enforcement mechanism:
 
 | Hook | Phase | What It Checks |
 |:---|:---|:---|
@@ -204,7 +204,7 @@ defend-in-depth uses Git hooks as its primary enforcement mechanism:
 
 ### Installing Hooks
 ```bash
-npx defend-in-depth init  # Auto-installs hooks
+npx defense-in-depth init  # Auto-installs hooks
 ```
 
 ### Bypassing Hooks

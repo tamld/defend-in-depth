@@ -31,8 +31,8 @@ flowchart TD
 | Action | Why Allowed |
 |:---|:---|
 | Read any project file | Observation is safe |
-| Run `defend-in-depth verify` | Guards are read-only |
-| Run `defend-in-depth doctor` | Health check is read-only |
+| Run `defense-in-depth verify` | Guards are read-only |
+| Run `defense-in-depth doctor` | Health check is read-only |
 | Generate plans, drafts, proposals | Proposals don't mutate state |
 | Run tests | Tests are observable, not mutative |
 | Create branch + commits | Isolated work in progress |

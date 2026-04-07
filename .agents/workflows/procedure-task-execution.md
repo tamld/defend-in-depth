@@ -3,7 +3,7 @@ id: WORKFLOW-TASK-EXECUTION
 status: active
 version: 1.0.0
 enforcement: advisory
-description: Simplified task execution workflow for defend-in-depth contributors
+description: Simplified task execution workflow for defense-in-depth contributors
 ---
 
 # Workflow: Task Execution
@@ -28,7 +28,7 @@ flowchart TD
     G --> H["Write / update tests"]
     H --> I["npm test<br/>npm run build"]
     I -->|fail| G
-    I -->|pass| J["Self-verify:<br/>npx defend-in-depth verify"]
+    I -->|pass| J["Self-verify:<br/>npx defense-in-depth verify"]
     J --> K["Commit with<br/>conventional format"]
     K --> L["Push + Create PR"]
     L --> M["CI pipeline<br/>(3 OS × 3 Node)"]
@@ -56,7 +56,7 @@ flowchart TD
 
 ### 4. Verify
 - Run `npm test` locally
-- Run `npx defend-in-depth verify` on your own code (dogfooding)
+- Run `npx defense-in-depth verify` on your own code (dogfooding)
 - Ensure no `any` types, no external deps
 
 ### 5. Submit

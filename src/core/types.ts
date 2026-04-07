@@ -1,5 +1,5 @@
 /**
- * Core type definitions for defend-in-depth.
+ * Core type definitions for defense-in-depth.
  *
  * Guard Interface — the contract every guard must implement.
  * All guards are pluggable: implement this interface → register with engine.
@@ -109,7 +109,7 @@ export interface PhaseGateConfig {
   sourcePatterns?: string[];
 }
 
-/** Root configuration loaded from defend.config.yml */
+/** Root configuration loaded from defense.config.yml */
 export interface DefendConfig {
   version: string;
   guards: {
@@ -296,17 +296,17 @@ export interface MetaGrowthSnapshot {
 /**
  * v0.8: Federation Payload — data format for reverse flow to AAOS.
  *
- * defend-in-depth collects field data (layers 0-2).
+ * defense-in-depth collects field data (layers 0-2).
  * AAOS consumes + analyzes (layers 2-3).
  * This type defines the bidirectional data contract.
  *
- * Flow: defend-in-depth (OSS embassy) → FederationPayload → AAOS (HQ)
- * AAOS learns from real-world OSS usage. defend-in-depth gets refined patterns back.
+ * Flow: defense-in-depth (OSS embassy) → FederationPayload → AAOS (HQ)
+ * AAOS learns from real-world OSS usage. defense-in-depth gets refined patterns back.
  */
 export interface FederationPayload {
   /** Source project identifier */
   sourceProject: string;
-  /** defend-in-depth version that generated this payload */
+  /** defense-in-depth version that generated this payload */
   version: string;
   /** Lessons discovered in the field (anonymized) */
   lessons: Lesson[];

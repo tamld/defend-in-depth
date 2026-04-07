@@ -1,11 +1,11 @@
 ---
 name: Bootstrap Agent
 description: >
-  5-phase onboarding wizard for AI agents entering a defend-in-depth project.
+  5-phase onboarding wizard for AI agents entering a defense-in-depth project.
   Self-identify, discover rules, scaffold artifacts, learn to contribute, verify setup.
 version: 1.0.0
 triggers:
-  - agent enters a new defend-in-depth project
+  - agent enters a new defense-in-depth project
   - agent is unsure what standards to follow
   - agent needs to understand project governance
 ---
@@ -15,7 +15,7 @@ triggers:
 > *"A well-onboarded agent is a productive agent. A confused agent is a liability."*
 
 This skill guides any AI agent through 5 phases to become a productive contributor
-in a defend-in-depth governed project.
+in a defense-in-depth governed project.
 
 ---
 
@@ -125,10 +125,10 @@ flowchart TD
 
 **Goal:** Ensure the project has all required artifacts.
 
-### Check: defend.config.yml exists
+### Check: defense.config.yml exists
 ```bash
 # If missing, create it
-npx defend-in-depth init
+npx defense-in-depth init
 ```
 
 ### Check: Required directories
@@ -144,21 +144,21 @@ npx defend-in-depth init
 
 ### Check: Git hooks installed
 ```bash
-npx defend-in-depth doctor
+npx defense-in-depth doctor
 ```
 
 ### Check: Prebuilt config matches your platform
 - If your platform has no prebuilt config → create a router file
 - Router file format:
   ```
-  You are operating in a defend-in-depth governed project.
+  You are operating in a defense-in-depth governed project.
   Read AGENTS.md at the project root to understand governance.
   Follow .agents/philosophy/COGNITIVE_TREE.md for mindset.
   Follow .agents/rules/ for mandatory standards.
   ```
 
 ### Do Not Do
-- Skip `defend-in-depth doctor` — it catches setup issues
+- Skip `defense-in-depth doctor` — it catches setup issues
 - Create empty placeholder files to "pass" scaffold check
 - Modify existing rules during scaffold phase
 
@@ -218,10 +218,10 @@ Types: `feat`, `fix`, `chore`, `docs`, `refactor`, `test`
 
 ```bash
 # 1. Project health
-npx defend-in-depth doctor
+npx defense-in-depth doctor
 
 # 2. All guards pass on current code
-npx defend-in-depth verify
+npx defense-in-depth verify
 
 # 3. TypeScript compiles
 npx tsc --noEmit
@@ -259,7 +259,7 @@ After completing bootstrap, keep this card handy:
 
 ```
 ┌────────────────────────────────────────┐
-│  🛡️ defend-in-depth Quick Reference   │
+│  🛡️ defense-in-depth Quick Reference   │
 ├────────────────────────────────────────┤
 │  Supreme Rule: HITL                   │
 │  Evidence: [CODE] [RUNTIME] [INFER]   │
@@ -268,7 +268,7 @@ After completing bootstrap, keep this card handy:
 │  Theater: TODO/TBD = VIOLATION        │
 │  Lessons: wrongApproach = MANDATORY   │
 │  Guards: Observe + Report, NO mutate  │
-│  Verify: npx defend-in-depth verify   │
-│  Health: npx defend-in-depth doctor   │
+│  Verify: npx defense-in-depth verify   │
+│  Health: npx defense-in-depth doctor   │
 └────────────────────────────────────────┘
 ```

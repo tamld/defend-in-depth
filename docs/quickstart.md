@@ -15,27 +15,27 @@
 
 ```bash
 # Option 1: Global install
-npm install -g defend-in-depth
+npm install -g defense-in-depth
 
 # Option 2: Project dependency
-npm install --save-dev defend-in-depth
+npm install --save-dev defense-in-depth
 
 # Option 3: Run without installing
-npx defend-in-depth init
+npx defense-in-depth init
 ```
 
 ## Initialize
 
 ```bash
-# Installs Git hooks + creates defend.config.yml
-npx defend-in-depth init
+# Installs Git hooks + creates defense.config.yml
+npx defense-in-depth init
 
 # Verify everything is working
-npx defend-in-depth doctor
+npx defense-in-depth doctor
 ```
 
 **What `init` does:**
-1. Creates `defend.config.yml` in your project root
+1. Creates `defense.config.yml` in your project root
 2. Installs `pre-commit` and `pre-push` Git hooks
 3. Enables `hollow-artifact` and `ssot-pollution` guards by default
 
@@ -51,7 +51,7 @@ git add test-hollow.md
 # Try to commit — guard will BLOCK
 git commit -m "feat: add test file"
 # Output:
-# 🛡️ defend-in-depth
+# 🛡️ defense-in-depth
 # ❌ BLOCK: hollow-artifact
 #   → test-hollow.md contains placeholder content (TODO)
 #   Fix: Replace placeholder with actual content
@@ -72,7 +72,7 @@ rm test-hollow.md
 
 ## Enable More Guards
 
-Edit `defend.config.yml`:
+Edit `defense.config.yml`:
 
 ```yaml
 guards:

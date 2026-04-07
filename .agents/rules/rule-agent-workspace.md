@@ -78,7 +78,7 @@ This is where **evergreen knowledge** lives — accessible to ALL agents and hum
 
 ## .gitignore Recommendations
 
-Projects using defend-in-depth SHOULD add these to `.gitignore`:
+Projects using defense-in-depth SHOULD add these to `.gitignore`:
 
 ```gitignore
 # Agent private workspaces (growth without tracking pressure)

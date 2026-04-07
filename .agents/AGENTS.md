@@ -17,7 +17,7 @@ flowchart TD
     P1 --> P2["② DISCOVER\nRead all 11 rules + COGNITIVE_TREE"]
     P2 --> P3["③ SCAFFOLD\nCheck/create required artifacts"]
     P3 --> P4["④ CONTRIBUTE\nLearn evidence tags, lesson schema"]
-    P4 --> P5["⑤ VERIFY\nRun defend-in-depth doctor"]
+    P4 --> P5["⑤ VERIFY\nRun defense-in-depth doctor"]
     P5 -->|"Pass"| READY["✅ Ready to work"]
     P5 -->|"Fail"| P3
 ```
@@ -77,7 +77,7 @@ flowchart TD
 
 ## Philosophy: Human-in-the-Loop (HITL)
 
-> **defend-in-depth is a middleware layer that bridges AI agents into human operational processes.**
+> **defense-in-depth is a middleware layer that bridges AI agents into human operational processes.**
 
 ### The Division of Labor
 
@@ -92,7 +92,7 @@ flowchart TD
 
 ### The Supreme Rule
 
-**HITL is non-negotiable.** defend-in-depth reduces the noise so humans can focus on what matters:
+**HITL is non-negotiable.** defense-in-depth reduces the noise so humans can focus on what matters:
 - Guards handle mechanical checks (hollow artifacts, commit format)
 - Humans handle semantic checks (is this the RIGHT solution?)
 - The system never auto-merges without meeting configurable criteria

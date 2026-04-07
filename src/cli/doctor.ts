@@ -12,7 +12,7 @@ import * as path from "node:path";
 import { loadConfig } from "../core/config-loader.js";
 
 export async function doctor(projectRoot: string): Promise<void> {
-  console.log("🩺 defend-in-depth doctor\n");
+  console.log("🩺 defense-in-depth doctor\n");
 
   let issues = 0;
 
@@ -26,7 +26,7 @@ export async function doctor(projectRoot: string): Promise<void> {
   }
 
   // 2. Config check
-  const configNames = ["defend.config.yml", "defend.config.yaml", ".defendrc.yml"];
+  const configNames = ["defense.config.yml", "defend.config.yaml", ".defendrc.yml"];
   const configFound = configNames.find((name) =>
     fs.existsSync(path.join(projectRoot, name)),
   );
@@ -45,7 +45,7 @@ export async function doctor(projectRoot: string): Promise<void> {
     }
   } else {
     console.log("  ⚠️  No config file found (using defaults)");
-    console.log("     Run 'defend-in-depth init' to create one.");
+    console.log("     Run 'defense-in-depth init' to create one.");
   }
 
   // 3. Hooks check
@@ -56,10 +56,10 @@ export async function doctor(projectRoot: string): Promise<void> {
       const hookPath = path.join(hooksDir, hookName);
       if (fs.existsSync(hookPath)) {
         const content = fs.readFileSync(hookPath, "utf-8");
-        if (content.includes("defend-in-depth")) {
+        if (content.includes("defense-in-depth")) {
           console.log(`  ✅ ${hookName} hook installed`);
         } else {
-          console.log(`  ⚠️  ${hookName} hook exists but is not from defend-in-depth`);
+          console.log(`  ⚠️  ${hookName} hook exists but is not from defense-in-depth`);
         }
       } else {
         console.log(`  ❌ ${hookName} hook not installed`);
@@ -73,6 +73,6 @@ export async function doctor(projectRoot: string): Promise<void> {
   if (issues === 0) {
     console.log("✅ All checks passed. Your project is defended!\n");
   } else {
-    console.log(`⚠️  ${issues} issue(s) found. Run 'defend-in-depth init' to fix.\n`);
+    console.log(`⚠️  ${issues} issue(s) found. Run 'defense-in-depth init' to fix.\n`);
   }
 }

@@ -31,7 +31,7 @@ flowchart TD
 |-------|----------|---------------|
 | **Experimental** | New, limited real-world testing | `enabled: false` |
 | **Stable** | Proven in ≥3 projects, low false-positive rate | `enabled: true` |
-| **Core** | Fundamental to defend-in-depth identity | `enabled: true`, not removable |
+| **Core** | Fundamental to defense-in-depth identity | `enabled: true`, not removable |
 
 ## Evidence Requirements for New Guards
 

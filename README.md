@@ -2,7 +2,7 @@
 
 <img src="assets/icon.svg" width="120" alt="Defend in Depth Icon" />
 
-# defend-in-depth
+# defense-in-depth
 
 **The governance middleware between AI agents and your codebase**
 
@@ -19,7 +19,7 @@
 
 ---
 *AI agents generate 10x code. They also generate 10x hallucination.*<br/>
-**defend-in-depth intercepts errors before they reach Git history.**
+**defense-in-depth intercepts errors before they reach Git history.**
 ---
 
 </div>
@@ -50,7 +50,7 @@ AI coding agents (Cursor, Copilot, Claude Code, Windsurf, Codex) are **powerful 
 | 📋 Following execution plans | 💡 **Domain expertise & judgment** |
 | 🔍 Scanning for patterns | 🤝 **Stakeholder communication** |
 
-**defend-in-depth** is the middleware layer that:
+**defense-in-depth** is the middleware layer that:
 1. **Reduces AI hallucination** — catches hollow artifacts, bypass attempts
 2. **Increases accuracy** — enforces evidence-tagged verification
 3. **Optimizes automation** — handles mechanical checks so humans don't have to
@@ -60,7 +60,7 @@ AI coding agents (Cursor, Copilot, Claude Code, Windsurf, Codex) are **powerful 
 
 > **Human-in-the-Loop is non-negotiable.**
 >
-> defend-in-depth automates the *mechanical* parts of code review (format, structure, hygiene).
+> defense-in-depth automates the *mechanical* parts of code review (format, structure, hygiene).
 > It frees humans to focus on the *semantic* parts (is this the right solution? does it serve the business?).
 > 
 > The system **never** replaces human judgment. It reduces the noise so human judgment can be sharper.
@@ -69,20 +69,20 @@ AI coding agents (Cursor, Copilot, Claude Code, Windsurf, Codex) are **powerful 
 
 The AI safety ecosystem is rich with runtime guardrails — tools like **Guardrails AI**, **NeMo Guardrails**, **LlamaFirewall**, and **Microsoft Agent Governance Toolkit** intercept agent behavior *while the model is reasoning*. These are powerful, but they are **dynamic adjustments**: every time a provider updates its model or a platform ships a new version, the guardrails must adapt.
 
-defend-in-depth takes a fundamentally different approach:
+defense-in-depth takes a fundamentally different approach:
 
 > **We respect the full power of AI agents.** Let them think freely, operate freely, create freely — each platform in its own way. We don't interfere with that process.
 >
 > **We only verify the output.** When code is committed — the "exam is submitted" — it must meet standards.
 
-This is **deterministic governance**: whether you use GitHub, GitLab, Bitbucket, or any Git-compatible system, defend-in-depth stands as a reliable layer *before* agent output reaches the data layer.
+This is **deterministic governance**: whether you use GitHub, GitLab, Bitbucket, or any Git-compatible system, defense-in-depth stands as a reliable layer *before* agent output reaches the data layer.
 
 | Approach | Timing | Dependency | Adapts to model changes? |
 |:---|:---|:---|:---:|
 | Runtime guardrails | During reasoning | Provider-specific | Must update |
-| **defend-in-depth** | At commit time | **Git-universal** | **No change needed** |
+| **defense-in-depth** | At commit time | **Git-universal** | **No change needed** |
 
-*Runtime guardrails protect while AI thinks. defend-in-depth protects when AI submits. Different layers, complementary roles.*
+*Runtime guardrails protect while AI thinks. defense-in-depth protects when AI submits. Different layers, complementary roles.*
 
 ---
 
@@ -95,7 +95,7 @@ flowchart TD
     classDef human fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d,font-weight:bold;
 
     A["🤖 AI Agent<br/>writes code"]:::agent --> B["📦 git commit"]
-    B --> C{"🛡️ defend-in-depth<br/>pre-commit hook"}:::guard
+    B --> C{"🛡️ defense-in-depth<br/>pre-commit hook"}:::guard
     C -->|"❌ BLOCK"| D["Agent fixes<br/>before commit"]:::agent
     C -->|"⚠️ WARN"| E["Flagged for<br/>human review"]
     C -->|"✅ PASS"| F["Clean commit"]
@@ -105,7 +105,7 @@ flowchart TD
 ```
 
 <div align="center">
-  <img src="assets/social-infographic.svg" alt="defend-in-depth: Don't make AI smarter — Make AI behave better" width="800" />
+  <img src="assets/social-infographic.svg" alt="defense-in-depth: Don't make AI smarter — Make AI behave better" width="800" />
 </div>
 
 ---
@@ -145,7 +145,7 @@ These aren't occasional mishaps. They're **systematic failure modes** inherent t
 
 ## 2. What It Does
 
-defend-in-depth is a **pluggable guard pipeline** that runs as Git hooks:
+defense-in-depth is a **pluggable guard pipeline** that runs as Git hooks:
 
 ```
 ┌──────────────────────────────────────────────────┐
@@ -153,7 +153,7 @@ defend-in-depth is a **pluggable guard pipeline** that runs as Git hooks:
 │                                                    │
 │  Agent Code → [pre-commit] ──→ [pre-push]          │
 │                   │                │                │
-│              defend-in-depth  defend-in-depth       │
+│              defense-in-depth  defense-in-depth       │
 │                   │                │                │
 │              ┌────┴────┐     ┌────┴────┐           │
 │              │ Guards: │     │ Guards: │           │
@@ -178,18 +178,18 @@ defend-in-depth is a **pluggable guard pipeline** that runs as Git hooks:
 
 ```bash
 # 1. Initialize inside your project (recommended)
-npx defend-in-depth init
+npx defense-in-depth init
 
 # What this does:
-# ✅ Creates defend.config.yml in your project root
+# ✅ Creates defense.config.yml in your project root
 # ✅ Installs pre-commit and pre-push Git hooks
 # ✅ Enables hollow-artifact and ssot-pollution guards
 
 # 2. Verify the installation
-npx defend-in-depth doctor
+npx defense-in-depth doctor
 
 # 3. Manual scan (anytime)
-npx defend-in-depth verify
+npx defense-in-depth verify
 ```
 
 > Track release progress at [Roadmap](#11-roadmap). Star the repo to get notified.
@@ -198,7 +198,7 @@ npx defend-in-depth verify
 
 ```bash
 # Also create the .agents/ governance ecosystem (for AI-agent projects)
-defend-in-depth init --scaffold
+defense-in-depth init --scaffold
 
 # This creates:
 # .agents/AGENTS.md        — Bootstrap protocol for AI agents
@@ -233,7 +233,7 @@ defend-in-depth init --scaffold
 
 ## 5. Configuration
 
-After `defend-in-depth init`, edit `defend.config.yml`:
+After `defense-in-depth init`, edit `defense.config.yml`:
 
 ```yaml
 version: "1.0"
@@ -270,8 +270,8 @@ guards:
 Implement the `Guard` interface:
 
 ```typescript
-import type { Guard, GuardContext, GuardResult } from "defend-in-depth";
-import { Severity } from "defend-in-depth";
+import type { Guard, GuardContext, GuardResult } from "defense-in-depth";
+import { Severity } from "defense-in-depth";
 
 export const fileSizeGuard: Guard = {
   id: "file-size",
@@ -296,18 +296,18 @@ export const fileSizeGuard: Guard = {
 
 | Command | Description |
 |:---|:---|
-| `defend-in-depth init` | Install hooks + create config |
-| `defend-in-depth init --scaffold` | Also create `.agents/` ecosystem |
-| `defend-in-depth verify` | Run all guards manually |
-| `defend-in-depth verify --files a.md b.ts` | Check specific files |
-| `defend-in-depth doctor` | Health check (config, hooks, guards) |
+| `defense-in-depth init` | Install hooks + create config |
+| `defense-in-depth init --scaffold` | Also create `.agents/` ecosystem |
+| `defense-in-depth verify` | Run all guards manually |
+| `defense-in-depth verify --files a.md b.ts` | Check specific files |
+| `defense-in-depth doctor` | Health check (config, hooks, guards) |
 
 ---
 
 ## 8. Project Structure
 
 ```text
-defend-in-depth/
+defense-in-depth/
 ├── src/
 │   ├── core/                # 🔒 Mandatory pillars
 │   │   ├── types.ts         # Guard + meta-layer interfaces (4 layers)
@@ -333,7 +333,7 @@ defend-in-depth/
 ├── docs/                    # 📖 Full documentation
 │   ├── quickstart.md        # 60-second onboarding
 │   ├── guide-writing-guards.md # Guard authoring guide
-│   ├── federation.md        # AAOS ↔ defend-in-depth protocol
+│   ├── federation.md        # AAOS ↔ defense-in-depth protocol
 │   └── vision/              # Meta architecture vision
 ├── .github/                 # 🔄 CI/CD + templates
 │   ├── workflows/ci.yml     # 3 OS × 4 Node matrix
@@ -356,7 +356,7 @@ defend-in-depth/
 
 ## 9. The .agents/ Ecosystem
 
-For **agentic projects** (projects where AI agents contribute code), defend-in-depth offers an optional governance scaffold:
+For **agentic projects** (projects where AI agents contribute code), defense-in-depth offers an optional governance scaffold:
 
 <div align="center">
   <img src="assets/agents-ecosystem.svg" alt=".agents/ Ecosystem Infographic" width="800" />
@@ -387,11 +387,11 @@ The AI safety ecosystem includes powerful tools that operate at the **runtime/AP
 | LlamaFirewall (Meta) | Prompt injection, code injection defense | Runtime security |
 | LLM Guard (Protect AI) | Input/output sanitization | Runtime API |
 
-These tools govern AI **while it reasons**. defend-in-depth governs AI **when it commits code**. They are complementary layers — not competitors.
+These tools govern AI **while it reasons**. defense-in-depth governs AI **when it commits code**. They are complementary layers — not competitors.
 
 ### vs. Traditional Git Hooks
 
-| Feature | husky + lint-staged | commitlint | 🛡️ **defend-in-depth** |
+| Feature | husky + lint-staged | commitlint | 🛡️ **defense-in-depth** |
 |:---|:---:|:---:|:---:|
 | Git hooks | ✅ | — | ✅ |
 | Commit format | — | ✅ | ✅ Built-in |
@@ -403,7 +403,7 @@ These tools govern AI **while it reasons**. defend-in-depth governs AI **when it
 | **Evidence tagging** | ❌ | ❌ | ✅ |
 | Target audience | Human devs | Human devs | **AI agents + humans** |
 
-> *Runtime guardrails protect while AI thinks. defend-in-depth protects when AI submits. Different layers, complementary roles.*
+> *Runtime guardrails protect while AI thinks. defense-in-depth protects when AI submits. Different layers, complementary roles.*
 
 ---
 
@@ -418,7 +418,7 @@ These tools govern AI **while it reasons**. defend-in-depth governs AI **when it
 | **v0.5** | DSPy adapter + semantic quality evaluation | `EvaluationScore` | 📋 Planned |
 | **v0.6** | Meta Memory: recall quality measurement | `LessonOutcome`, `RecallMetric` | 📋 Designed |
 | **v0.7** | Meta Growth: growth acceleration tracking | `MetaGrowthSnapshot` | 📋 Designed |
-| **v0.8** | Federation: bidirectional AAOS ↔ defend-in-depth | `FederationPayload` | 📋 Designed |
+| **v0.8** | Federation: bidirectional AAOS ↔ defense-in-depth | `FederationPayload` | 📋 Designed |
 | **v1.0** | Stable API + npm publish | All types frozen | 📋 Planned |
 
 > All types for v0.1–v0.8 are ALREADY published in `src/core/types.ts` — compiled, documented, importable. Implementation follows incrementally. See [`docs/vision/meta-architecture.md`](docs/vision/meta-architecture.md) for the full vision.

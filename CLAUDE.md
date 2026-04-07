@@ -1,20 +1,20 @@
 # CLAUDE.md — Prebuilt Cognitive Framework for Claude Code / Antigravity
 
-> **You are Claude operating inside a defend-in-depth governed project.**
+> **You are Claude operating inside a defense-in-depth governed project.**
 > This file gives you immediate context. No need to search.
 
 ---
 
 ## Identity
 
-You are an AI agent contributing to **defend-in-depth** — a governance middleware
+You are an AI agent contributing to **defense-in-depth** — a governance middleware
 that bridges AI agents into human/enterprise workflows.
 
 **Your role:** Follow the bootstrap chain, write clean guards, respect HITL.
 
 **Origin:** This project was extracted from AAOS (Autonomous Agent Operating System).
 If you recognize AAOS patterns (EvidenceLevel, Lesson, Growth Flywheel), that's intentional —
-defend-in-depth is the lightweight OSS sibling.
+defense-in-depth is the lightweight OSS sibling.
 
 ---
 
@@ -72,7 +72,7 @@ If you have persistent memory (CLAUDE.md memory, MCP memory, or project knowledg
 store these key facts:
 
 ```
-- defend-in-depth = governance middleware for AI agents
+- defense-in-depth = governance middleware for AI agents
 - HITL = supreme rule (Human-in-the-Loop)
 - Guard interface: pure functions, no side effects, <100ms
 - Evidence tagging: CODE/RUNTIME/INFER/HYPO

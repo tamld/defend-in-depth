@@ -2,7 +2,7 @@
 
 > *"Keeping ideas in your head is just drawing on paper. Shipping ideas as types is an invitation to the world."*
 
-This document describes WHERE defend-in-depth is heading. These aren't promises — they're published designs that invite community feedback and contribution.
+This document describes WHERE defense-in-depth is heading. These aren't promises — they're published designs that invite community feedback and contribution.
 
 ---
 
@@ -45,7 +45,7 @@ Measuring whether the growth rate itself is accelerating. `MetaGrowthSnapshot` t
 
 > *"Not instructions for agents. Instructions that teach agents to write instructions."*
 
-| Layer | What exists | Example in defend-in-depth |
+| Layer | What exists | Example in defense-in-depth |
 |:---|:---|:---|
 | **Prompting** | Guard checks code | `hollow-artifact.ts` scans file content |
 | **Meta-prompting** | Contract teaches writing guards | `guard-interface.md` defines the Guard API |
@@ -72,7 +72,7 @@ A memory system has two failure modes:
 | **False Recall** | Lesson surfaces but isn't helpful | Low precision |
 | **Missed Recall** | Relevant lesson exists but isn't surfaced | Low coverage |
 
-defend-in-depth addresses this with `LessonOutcome`:
+defense-in-depth addresses this with `LessonOutcome`:
 
 ```typescript
 interface LessonOutcome {
@@ -110,7 +110,7 @@ From accumulated `LessonOutcome` data, we derive `RecallMetric`:
 
 ```
 ┌─────────────┐                    ┌──────────────────┐
-│  AAOS       │ ──── Extract ────→ │ defend-in-depth  │
+│  AAOS       │ ──── Extract ────→ │ defense-in-depth  │
 │  (HQ)       │    patterns,       │ (OSS Embassy)    │
 │             │    philosophy      │                  │
 │             │                    │ Collects:        │
@@ -128,7 +128,7 @@ The `FederationPayload` type defines the data contract:
 - **GuardStats** showing which guards work (and which don't)
 - **MetaGrowthSnapshot** tracking overall system health
 
-**Why this matters:** AAOS is built in a controlled environment. defend-in-depth runs in the wild — different OSes, different project types, different agent platforms. The field data is invaluable.
+**Why this matters:** AAOS is built in a controlled environment. defense-in-depth runs in the wild — different OSes, different project types, different agent platforms. The field data is invaluable.
 
 ---
 
