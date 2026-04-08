@@ -63,6 +63,8 @@ guards:
     enabled: false
   phaseGate:
     enabled: false
+  ticketIdentity:
+    enabled: false
 `;
       fs.writeFileSync(configPath, minimalConfig, "utf-8");
       console.log("  ✅ Created defense.config.yml (customize as needed)");

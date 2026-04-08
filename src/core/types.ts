@@ -59,6 +59,8 @@ export interface GuardContext {
   branch?: string;
   /** Loaded configuration */
   config: DefendConfig;
+  /** Extracted Ticket Identifier Context (v0.3) */
+  ticket?: TicketRef;
 }
 
 /** The Guard interface — implement this to create a new guard */
@@ -109,6 +111,15 @@ export interface PhaseGateConfig {
   sourcePatterns?: string[];
 }
 
+/** v0.3: Ticket Identity guard configuration */
+export interface TicketIdentityConfig {
+  enabled: boolean;
+  /** Regex pattern for valid ticket IDs (default: TK-[0-9A-Z-]+) */
+  tkidPattern?: string;
+  /** Severity: 'warn' (advisory, v0.3 default) or 'block' (enforcement) */
+  severity?: 'warn' | 'block';
+}
+
 /** Root configuration loaded from defense.config.yml */
 export interface DefendConfig {
   version: string;
@@ -118,6 +129,7 @@ export interface DefendConfig {
     commitFormat?: CommitFormatConfig;
     branchNaming?: BranchNamingConfig;
     phaseGate?: PhaseGateConfig;
+    ticketIdentity?: TicketIdentityConfig;
   };
 }
 
@@ -291,17 +303,17 @@ export interface MetaGrowthSnapshot {
   lessonSpecificityScore: number;
 }
 
-// ─── Federation Layer: Reverse Design to AAOS ───
+// ─── Telemetry Layer: Reverse Design ───
 
 /**
- * v0.8: Federation Payload — data format for reverse flow to AAOS.
+ * v0.8: Telemetry Payload — data format for reverse flow to internal systems.
  *
  * defense-in-depth collects field data (layers 0-2).
- * AAOS consumes + analyzes (layers 2-3).
+ * Hub consumes + analyzes (layers 2-3).
  * This type defines the bidirectional data contract.
  *
- * Flow: defense-in-depth (OSS embassy) → FederationPayload → AAOS (HQ)
- * AAOS learns from real-world OSS usage. defense-in-depth gets refined patterns back.
+ * Flow: defense-in-depth (OSS embassy) → TelemetryPayload → Hub (HQ)
+ * Hub learns from real-world OSS usage. defense-in-depth gets refined patterns back.
  */
 export interface FederationPayload {
   /** Source project identifier */

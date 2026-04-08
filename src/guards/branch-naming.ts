@@ -4,7 +4,7 @@
  * Enforces branch naming conventions.
  * Disabled by default — enable in defense.config.yml.
  *
- * Pattern source: AAOS rule-git-collaboration-guard.ts
+ * Pattern source: internal project rule-git-collaboration-guard.ts
  */
 
 import type { Guard, GuardContext, GuardResult } from "../core/types.js";

@@ -5,21 +5,61 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+---
+
+## [Unreleased] — v0.3 (In Progress)
+
+### Added
+- `ticket-identity` guard (v0.3 TKID Lite) — detects cross-ticket contamination in commits (WARN severity)
+- Explicit contract surface for `ticketIdentity` guard in `DefendConfig` and `defense.config.yml` (opt-in by default)
+- `TicketRef` interface and `TicketIdentityConfig` in `src/core/types.ts` for Federation
+- Federation v0.3: `extractTicketRef()` now derives ticket scope purely from branch name (generic, no AAOS lock-in)
+
+### Changed
+- `engine.ts`: Removed hardcoded `.worktrees/` path assumption; now uses generic `path.basename()` fallback
+
+---
+
+## [0.2.0] — Ecosystem & Agent Governance Scaffold
+
+### Added
+- `.agents/` governance scaffold via `npx defense-in-depth init --scaffold`
+  - 18 rules covering consistency, guard lifecycle, context discipline, living documents
+  - 5 skills: `skill-bootstrap-agent`, `skill-creator`, `skill-deep-research`, `skill-self-reflection`, `_template`
+  - Contracts directory: `guard-interface.md`, `type-export-contract.md`
+  - Workflows: task execution, onboarding procedures
+  - Philosophy: `COGNITIVE_TREE.md` — cognitive framework for AI agents
+- Prebuilt agent configs: `GEMINI.md`, `CLAUDE.md`, `.cursorrules`
+- Lazy-load documentation hub in `docs/`:
+  - `docs/user-guide/configuration.md` — full config schema reference
+  - `docs/user-guide/cli-reference.md` — CLI command reference
+  - `docs/dev-guide/writing-guards.md` — guard authoring guide
+  - `docs/dev-guide/architecture.md` — architecture deep-dive and alternatives comparison
+- `STRATEGY.md` — strategic roadmap and federation design rationale
+
+### Changed
+- `README.md` refactored from monolithic (20KB) to Lazy-Load Hub (~7KB)
+- `README.vi.md` refactored to match EN structure (~5.6KB)
+- Dual-audience documentation: human hub + agent machine gateway
+
+---
+
+## [0.1.0] — Foundation
 
 ### Added
 - Core engine with pluggable guard pipeline (`src/core/engine.ts`)
-- Type-safe guard interface with `Guard`, `GuardResult`, `Finding` types
+- Type-safe guard interface with `Guard`, `GuardResult`, `Finding`, `Severity`, `EvidenceLevel` types
 - YAML config loader with deep merge defaults (`src/core/config-loader.ts`)
 - 5 built-in guards:
-  - `hollow-artifact` — detects files with only TODO/TBD placeholders
-  - `ssot-pollution` — blocks governance/config files from feature PRs
-  - `commit-format` — enforces conventional commit messages
-  - `branch-naming` — validates branch name patterns
-  - `phase-gate` — requires plan files before code commits
+  - `hollow-artifact` — detects files with only `TODO`/`TBD` placeholders (BLOCK)
+  - `ssot-pollution` — blocks governance/config files from feature branch commits (BLOCK)
+  - `commit-format` — enforces conventional commit messages (WARN)
+  - `branch-naming` — validates branch name patterns (WARN, off by default)
+  - `phase-gate` — requires plan files before code commits (BLOCK, off by default)
 - CLI with 3 commands: `init`, `verify`, `doctor`
 - Git hook generators (pre-commit, pre-push)
-- Project self-awareness layer (`AGENTS.md`)
-- Immutable consistency rules (`.agents/rules/`)
-- Dual-audience README (human + AI agent)
-- OSS standard files (LICENSE, CONTRIBUTING, CHANGELOG)
+- `AGENTS.md` root — project self-awareness layer for AI agents
+- Immutable consistency rules (`.agents/rules/rule-consistency.md`)
+- Cross-platform CI matrix: 3 OS × 4 Node.js versions
+- OSS standard files: `LICENSE`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`
+- `defense.config.yml` default template

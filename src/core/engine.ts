@@ -7,7 +7,7 @@
  *   3. Run each guard against context
  *   4. Aggregate into EngineVerdict
  *
- * Pattern source: pre-push-runner.ts from AAOS (sequential gate pipeline → verdict)
+ * Pattern source: internal project pre-push-runner.ts (sequential gate pipeline → verdict)
  */
 
 import type {
@@ -16,6 +16,7 @@ import type {
   GuardResult,
   EngineVerdict,
   DefendConfig,
+  TicketRef,
 } from "./types.js";
 import { Severity } from "./types.js";
 import { loadConfig } from "./config-loader.js";
@@ -42,6 +43,44 @@ export class DefendEngine {
     return this;
   }
 
+  /** Extract a TicketRef from common contexts */
+  private extractTicketRef(branch?: string, commitMessage?: string, projectRoot?: string): TicketRef | undefined {
+    let id: string | undefined;
+
+    // 1. Extract ID from branch
+    if (branch) {
+      const match = branch.match(/(TK-[0-9A-Z-]+)/i);
+      if (match) id = match[1].toUpperCase();
+    }
+
+    // 2. If no ID from branch, try commit message
+    if (!id && commitMessage) {
+      const match = commitMessage.match(/(TK-[0-9A-Z-]+)/i);
+      if (match) id = match[1].toUpperCase();
+    }
+
+    // 3. If no ID, try project root directory name (generic — works with any naming convention)
+    if (!id && projectRoot) {
+      const dirName = projectRoot.replace(/[\\/]+$/, "").split(/[\\/]/).pop() ?? "";
+      const match = dirName.match(/(TK-[0-9A-Z-]+)/i);
+      if (match) id = match[1].toUpperCase();
+    }
+
+    if (!id) return undefined;
+
+    const ticketRef: TicketRef = { id };
+
+    // Try to infer type from branch prefix
+    if (branch) {
+      const typeMatch = branch.match(/^(feat|fix|chore|docs|refactor)\//i);
+      if (typeMatch) {
+         ticketRef.type = typeMatch[1].toLowerCase() as TicketRef["type"];
+      }
+    }
+
+    return ticketRef;
+  }
+
   /** Run all registered guards and produce a verdict */
   async run(
     stagedFiles: string[],
@@ -49,12 +88,15 @@ export class DefendEngine {
   ): Promise<EngineVerdict> {
     const start = performance.now();
 
+    const ticket = this.extractTicketRef(options?.branch, options?.commitMessage, this.projectRoot);
+
     const ctx: GuardContext = {
       stagedFiles,
       projectRoot: this.projectRoot,
       commitMessage: options?.commitMessage,
       branch: options?.branch,
       config: this.config,
+      ticket,
     };
 
     const results: GuardResult[] = [];

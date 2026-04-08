@@ -4,7 +4,7 @@
  * Reads defense.config.yml from the project root.
  * Falls back to sensible defaults if no config file exists.
  *
- * Pattern source: constitution.ts from AAOS (YAML config → merge defaults)
+ * Pattern source: internal project constitution.ts (YAML config → merge defaults)
  */
 
 import * as fs from "node:fs";
@@ -53,6 +53,11 @@ const DEFAULT_CONFIG: DefendConfig = {
       enabled: false,
       planFile: "implementation_plan.md",
       sourcePatterns: ["src/**", "lib/**", "app/**"],
+    },
+    ticketIdentity: {
+      enabled: false,
+      tkidPattern: "TK-[0-9A-Z-]+",
+      severity: "warn",
     },
   },
 };

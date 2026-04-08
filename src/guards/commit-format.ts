@@ -4,7 +4,7 @@
  * Enforces conventional commit message format.
  * Default pattern: type(scope): description
  *
- * Pattern source: AAOS rule-pr-standards.md
+ * Pattern source: internal project rule-pr-standards.md
  */
 
 import type { Guard, GuardContext, GuardResult } from "../core/types.js";

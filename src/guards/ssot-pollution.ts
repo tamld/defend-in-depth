@@ -4,7 +4,7 @@
  * Detects state files (governance configs, flow state, backlog) leaking into commits.
  * These files should never be part of feature PRs — they are SSoT managed by tooling.
  *
- * Pattern source: sheriff.ts artifact_zones + pre-push-structure-guard.ts from AAOS
+ * Pattern source: internal project sheriff.ts artifact_zones + pre-push-structure-guard.ts
  */
 
 import * as path from "node:path";
