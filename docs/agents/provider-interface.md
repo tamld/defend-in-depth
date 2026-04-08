@@ -4,13 +4,14 @@
 
 A `TicketStateProvider` runs **first** during the hook lifecycle to enrich the ticket context.
 
-## Mandatory Constraints
+## Architectural Boundaries (Strict Constraints)
 
-1. **Async and Network Safe**: Providers are the **ONLY** layer in `defense-in-depth` authorized to do asynchronous or side-effectual read operations (reading files, calling remote endpoints).
-2. **Crash Prevention**: Providers operate at the perimeter. They must wrap external interactions in `try/catch`. 
-3. **Graceful Failures**: If network is down, or `TICKET.md` is malformed, do NOT throw an Error. Return `undefined`.
-4. **Timeouts**: Because hook execution blocks git commands, API providers must enforce their own strict timeouts (using `Promise.race`) falling back to `undefined` if resolution takes more than a small threshold (e.g. `1000ms`).
-5. **No State Mutation**: Providers resolve state. You must not write files or change records inside a resolving method.
+| Rule | Description | Enforcement |
+|------|-------------|-------------|
+| **[R1: Scope]** | Only `TicketStateProvider` classes may perform I/O (fetch, fs.read) | Linter / Review Gate |
+| **[R2: Recovery]**| All implementations MUST wrap `async` calls in `try/catch` and return `undefined` on error | Runtime Failure if missed |
+| **[R3: Timeout]** | Implementations MUST use `Promise.race` with max `1000ms` bound | UX degradation if missed |
+| **[R4: Mutation]**| `resolve()` MUST NEVER mutate external state (No POST/PUT, No Write) | Pure function audit |
 
 ## Code Definition Reference
 

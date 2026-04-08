@@ -6,11 +6,18 @@ Guards in `defense-in-depth` are strictly pure functions—they evaluate data wi
 
 ## How it Works
 
-1. The CLI engine identifies the required context for the current Git hook.
-2. If ticket identity is required, the engine invokes the configured **TicketStateProvider**.
-3. The Provider resolves the current ticket state (e.g., parsing a file or making an API request).
-4. The resolved `TicketRef` is injected into the context.
-5. Guards evaluate the context purely.
+The pipeline executes Providers before evaluating Guards, ensuring the context is enriched prior to purely functional checks.
+
+```mermaid
+flowchart TD
+    START["git commit / push"] --> HOOK["Git Hook Triggered"]
+    HOOK --> PROVIDERS[["1. TicketStateProviders (I/O allowed)"]]
+    PROVIDERS --> CONTEXT{"Enriched Context"}
+    CONTEXT --> GUARDS[["2. Guards (Strictly Pure)"]]
+    GUARDS --> RESULT{"Findings (PASS/WARN/BLOCK)"}
+    RESULT -- BLOCK --> REJECT["Commit Rejected"]
+    RESULT -- PASS/WARN --> ACCEPT["Commit Accepted"]
+```
 
 ## The Default `file` Provider
 

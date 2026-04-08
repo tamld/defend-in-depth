@@ -8,14 +8,14 @@ A `Guard` in `defense-in-depth` evaluates context passed by the hook engine and 
 
 Where [Providers](./provider-interface.md) are "dirty" and "slow", Guards are **"pure"** and **"fast"**. Guards never make asynchronous calls, nor do they look up external APIs.
 
-## Mandatory Constraints
+## Architectural Boundaries (Strict Constraints)
 
-1. **Synchronous ONLY**: Guards must strictly output an Array. Functions may only be declared as synchronous.
-2. **Pure Functions ONLY**: 
-    - A Guard MUST NOT perform I/O.
-    - A Guard MUST NOT spawn shells, use network `fetch`, or read from `fs`.
-    - If a Guard requires data (such as the content of `TICKET.md`), that data must be supplied via the `HookContext`, enriched by a Provider.
-3. **No Mutating Scope**: Never mutate the `HookContext`.
+| Rule | Description | Enforcement |
+|------|-------------|-------------|
+| **[R1: Synchronous]** | Guards MUST return `Finding[]` synchronously. No promises. | TypeScript Compiler |
+| **[R2: Purity]** | Guards MUST NOT perform I/O (no `fs`, no `fetch`, no shell) | Pre-commit git hooks |
+| **[R3: Context Only]** | External data (e.g., ticket state) MUST be supplied via `HookContext` via a Provider | Code review |
+| **[R4: Immutability]** | Guards MUST NEVER mutate `HookContext` | ES6 `Readonly<T>` types |
 
 ## Code Definition Reference
 

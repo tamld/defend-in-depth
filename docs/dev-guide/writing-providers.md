@@ -1,6 +1,26 @@
 # Writing Custom Providers
 
-If the default `file` provider does not meet your needs (e.g. you want to fetch ticket status from Jira, Linear, or a complex external database), you can write a custom `TicketStateProvider`.
+> **Providers bridge the gap between deterministic Git hooks and your agile ecosystem.** 
+> Use them to fetch rich ticket status from Jira, Linear, or custom databases without inflating the core `defense-in-depth` engine.
+
+If the default `file` provider does not meet your needs, you can easily wire your own `TicketStateProvider`.
+
+## Lifecycle of a Custom Provider
+
+```mermaid
+sequenceDiagram
+    participant Hook as Git Hook Engine
+    participant CP as Custom Provider
+    participant API as External Service (Linear/Jira)
+    
+    Hook->>CP: resolve("TK-123")
+    activate CP
+    CP->>API: GET /api/tickets/TK-123
+    API-->>CP: JSON Response
+    CP-->>Hook: TicketRef { id, phase, type }
+    deactivate CP
+    Note right of Hook: Pipeline passes context to Guards
+```
 
 ## The `TicketStateProvider` Interface
 
