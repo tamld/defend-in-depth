@@ -8,7 +8,9 @@ reviews:
   review_status: true
   path_instructions:
     - path: "src/guards/**"
-      instructions: "Focus on false positive/negative rates. Guards must be pure (no side effects beyond reading files)."
+      instructions: "Guards MUST be 100% pure functions. They must NOT perform any I/O (no fs, no fetch). All data must come from HookContext. Focus on false positive/negative rates."
+    - path: "src/federation/**"
+      instructions: "TicketStateProviders are the ONLY layer allowed to do I/O. Strictly ensure that every network call uses an AbortController for timeouts, and all async errors are caught and swallowed gracefully (returning undefined, NEVER throwing)."
     - path: "src/core/**"
       instructions: "Engine pipeline is critical. Check for error handling, crash protection, and type safety."
   auto_review:
