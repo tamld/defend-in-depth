@@ -59,20 +59,34 @@ export class ApiTicketProvider implements TicketStateProvider {
   }
 
   async resolve(ticketId: string): Promise<TicketRef | undefined> {
+    // [Anti-Spam Guard] In production, you should check a local FileSystem cache 
+    // (e.g. .git/defense-cache.json) before hitting the network to keep Git hooks < 50ms.
+
+    // [Dangling Socket Guard] Always use an AbortController so Promise.race timeouts
+    // don't leave zombie connections hanging in the background.
+    const controller = new AbortController();
+    const timeoutMsg = setTimeout(() => controller.abort(), 1000); 
+
     try {
-      const response = await fetch(`${this.endpoints}/${ticketId}`);
+      const response = await fetch(`${this.endpoints}/${ticketId}`, { 
+        signal: controller.signal 
+      });
+      clearTimeout(timeoutMsg);
+
       if (!response.ok) return undefined;
 
       const data = await response.json();
-      
       return {
         id: data.id,
         phase: data.status,
         type: data.team === 'docs' ? 'docs' : 'feat'
       };
-    } catch {
-      // Providers must NOT throw exceptions! They should gracefully absorb errors and return undefined.
-      console.warn(`[myApi] Failed to fetch ticket ${ticketId}`);
+    } catch (err) {
+      clearTimeout(timeoutMsg);
+      // Providers must NOT throw exceptions! They should gracefully absorb errors.
+      if (err.name === 'AbortError') {
+        console.warn(`\n[myApi] Timeout fetching ${ticketId}. Proceeding blindly.`);
+      }
       return undefined;
     }
   }
