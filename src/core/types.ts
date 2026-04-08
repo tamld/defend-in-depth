@@ -59,6 +59,8 @@ export interface GuardContext {
   branch?: string;
   /** Loaded configuration */
   config: DefendConfig;
+  /** Extracted Ticket Identifier Context (v0.3) */
+  ticket?: TicketRef;
 }
 
 /** The Guard interface — implement this to create a new guard */
@@ -109,6 +111,15 @@ export interface PhaseGateConfig {
   sourcePatterns?: string[];
 }
 
+/** v0.3: Ticket Identity guard configuration */
+export interface TicketIdentityConfig {
+  enabled: boolean;
+  /** Regex pattern for valid ticket IDs (default: TK-[0-9A-Z-]+) */
+  tkidPattern?: string;
+  /** Severity: 'warn' (advisory, v0.3 default) or 'block' (enforcement) */
+  severity?: 'warn' | 'block';
+}
+
 /** Root configuration loaded from defense.config.yml */
 export interface DefendConfig {
   version: string;
@@ -118,6 +129,7 @@ export interface DefendConfig {
     commitFormat?: CommitFormatConfig;
     branchNaming?: BranchNamingConfig;
     phaseGate?: PhaseGateConfig;
+    ticketIdentity?: TicketIdentityConfig;
   };
 }
 

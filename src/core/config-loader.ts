@@ -54,6 +54,11 @@ const DEFAULT_CONFIG: DefendConfig = {
       planFile: "implementation_plan.md",
       sourcePatterns: ["src/**", "lib/**", "app/**"],
     },
+    ticketIdentity: {
+      enabled: false,
+      tkidPattern: "TK-[0-9A-Z-]+",
+      severity: "warn",
+    },
   },
 };
 
