@@ -3,15 +3,15 @@ import assert from "node:assert";
 import * as fs from "fs/promises";
 import * as path from "path";
 import * as os from "os";
-import { recordLesson, searchLessons, recordGrowthMetric } from "../src/core/memory.js";
-import { EvidenceLevel, Lesson, GrowthMetric } from "../src/core/types.js";
+import { recordLesson, searchLessons, recordGrowthMetric } from "../dist/core/memory.js";
+import { EvidenceLevel } from "../dist/core/types.js";
 
 test("Memory Layer: Lesson and Growth Metrics tracking", async (t) => {
   // Create a temporary directory for tests to avoid writing to actual project root
   const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "defense-memory-test-"));
 
   await t.test("should record a new lesson to lessons.jsonl", async () => {
-    const payload: Omit<Lesson, "id" | "createdAt"> = {
+    const payload = {
       title: "Test Lesson",
       scenario: "Running memory tests",
       wrongApproach: "Not testing",
@@ -55,7 +55,7 @@ test("Memory Layer: Lesson and Growth Metrics tracking", async (t) => {
   });
 
   await t.test("should record a growth metric", async () => {
-    const payload: Omit<GrowthMetric, "measuredAt"> = {
+    const payload = {
       name: "guard_false_positive_rate",
       value: 0.05,
       unit: "percentage",

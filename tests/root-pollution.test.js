@@ -1,9 +1,8 @@
 import { strict as assert } from "node:assert";
-import { rootPollutionGuard } from "../src/guards/root-pollution.js";
-import { Severity } from "../src/core/types.js";
-import type { GuardContext, DefendConfig } from "../src/core/types.js";
+import { rootPollutionGuard } from "../dist/guards/root-pollution.js";
+import { Severity } from "../dist/core/types.js";
 
-function createContext(stagedFiles: string[], configOverrides: any = {}): GuardContext {
+function createContext(stagedFiles, configOverrides = {}) {
   return {
     stagedFiles,
     projectRoot: "/fake/root",
@@ -17,7 +16,7 @@ function createContext(stagedFiles: string[], configOverrides: any = {}): GuardC
           ...configOverrides,
         },
       },
-    } as DefendConfig,
+    },
   };
 }
 
