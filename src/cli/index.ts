@@ -12,6 +12,16 @@
 import { init } from "./init.js";
 import { verify } from "./verify.js";
 import { doctor } from "./doctor.js";
+import { handleLessonCommand } from "./lesson.js";
+import { handleGrowthCommand } from "./growth.js";
+import { readFileSync } from "fs";
+import { dirname, join } from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const packageJson = JSON.parse(readFileSync(join(__dirname, "../../package.json"), "utf-8"));
+const VERSION = packageJson.version;
 
 const args = process.argv.slice(2);
 const command = args[0];
@@ -30,6 +40,14 @@ async function main(): Promise<void> {
       await doctor(process.cwd());
       break;
 
+    case "lesson":
+      await handleLessonCommand(process.cwd(), args.slice(1));
+      break;
+
+    case "growth":
+      await handleGrowthCommand(process.cwd(), args.slice(1));
+      break;
+
     case "--help":
     case "-h":
     case undefined:
@@ -38,7 +56,7 @@ async function main(): Promise<void> {
 
     case "--version":
     case "-v":
-      console.log("defense-in-depth v0.1.0");
+      console.log(`defense-in-depth v${VERSION}`);
       break;
 
     default:
@@ -59,6 +77,8 @@ Commands:
   init      Install Git hooks (pre-commit + pre-push) into your project
   verify    Run all guards against staged files or a path
   doctor    Health check — verify config, hooks, and guard status
+  lesson    Manage lessons (án lệ) in the local memory (v0.4)
+  growth    Manage growth metrics checking the system's learning velocity (v0.4)
 
 Options:
   --help    Show this help

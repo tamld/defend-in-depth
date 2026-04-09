@@ -65,6 +65,13 @@ guards:
     enabled: false
   ticketIdentity:
     enabled: false
+  rootPollution:
+    enabled: true
+  hitlReview:
+    enabled: true
+    protectedBranches:
+      - main
+      - master
 `;
       fs.writeFileSync(configPath, minimalConfig, "utf-8");
       console.log("  ✅ Created defense.config.yml (customize as needed)");

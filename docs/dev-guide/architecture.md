@@ -1,6 +1,10 @@
 # Architecture & Alternatives
 
+> Executor: Gemini-CLI
+
 ## 🏗️ Architecture
+
+> **Looking for the big picture?** See the [Unified System Blueprint](../vision/system-blueprint.md) for how Guards connect with Memory, Identity, and AI models.
 
 ```mermaid
 flowchart TD

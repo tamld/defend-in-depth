@@ -43,6 +43,8 @@
 
 ## Philosophy: Human-in-the-Loop (HITL)
 
+*For the complete philosophical foundation — the three cognitive branches, the DO/DON'T mandates, and the growth flywheel — see [COGNITIVE_TREE.md](.agents/philosophy/COGNITIVE_TREE.md).*
+
 > *"Trust but Verify: Autonomous execution demands empirical proof."*
 
 ### The Core Belief
@@ -224,6 +226,7 @@ defense-in-depth init --scaffold
 |:---|:---:|:---:|:---|
 | **Hollow Artifact** | ✅ ON | BLOCK | Files with only `TODO`, `TBD`, empty templates |
 | **SSoT Pollution** | ✅ ON | BLOCK | Config/state files modified in feature branches |
+| **Root Pollution** | ✅ ON | BLOCK | Unapproved files or folders created in the project root |
 | **Commit Format** | ✅ ON | WARN | Non-conventional commit messages |
 | **Ticket Identity** | ❌ OFF | WARN | Commit references a conflicting ticket |
 | **Branch Naming** | ❌ OFF | WARN | Branch names not matching pattern |
@@ -324,6 +327,8 @@ export interface TicketStateProvider {
 | `defense-in-depth verify` | Run all guards manually |
 | `defense-in-depth verify --files a.md b.ts` | Check specific files |
 | `defense-in-depth doctor` | Health check (config, hooks, guards) |
+| `defense-in-depth lesson record` / `search` | Record new lessons or search existing ones in `lessons.jsonl` |
+| `defense-in-depth growth record` | Record a new growth metric to `growth_metrics.jsonl` |
 
 ---
 
@@ -435,9 +440,9 @@ These tools govern AI **while it reasons**. defense-in-depth governs AI **when i
 | Version | Focus | Key Types | Status |
 |:---|:---|:---|:---:|
 | **v0.1** | Core guards + CLI + OSS + CI/CD + prebuilt configs | `Guard`, `Severity`, `Finding` | ✅ Done |
-| **v0.2** | `.agents/` scaffold + 18 rules + 5 skills + lazy loading | `GuardContext`, config schema | ✅ Done |
-| **v0.3** | TKID Lite (file-based tickets) + trust-but-verify | `TicketRef` | 🔄 In Progress |
-| **v0.4** | Memory Layer (`lessons.jsonl`) + growth metrics | `Lesson`, `GrowthMetric` | 📋 Planned |
+| **v0.2** | `.agents/` scaffold + 19 rules + 5 skills + lazy loading | `GuardContext`, config schema | ✅ Done |
+| **v0.3** | TKID Lite (file-based tickets) + trust-but-verify | `TicketRef` | ✅ Done |
+| **v0.4** | Memory Layer (`lessons.jsonl`) + growth metrics | `Lesson`, `GrowthMetric` | ✅ Done |
 | **v0.5** | DSPy adapter + semantic quality evaluation | `EvaluationScore` | 📋 Planned |
 | **v0.6** | Meta Memory: recall quality measurement | `LessonOutcome`, `RecallMetric` | 📋 Designed |
 | **v0.7** | Meta Growth: growth acceleration tracking | `MetaGrowthSnapshot` | 📋 Designed |

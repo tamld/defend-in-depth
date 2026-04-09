@@ -1,5 +1,7 @@
 # Contributing to defense-in-depth
 
+> Executor: Gemini-CLI
+
 Thank you for your interest in contributing! This project follows strict standards to maintain quality.
 
 ## Quick Start
@@ -21,10 +23,14 @@ npm test
 
 ## Rules (Non-Negotiable)
 
-Before writing any code, read:
+Before writing any code, read this first:
+- [`.agents/philosophy/COGNITIVE_TREE.md`](.agents/philosophy/COGNITIVE_TREE.md) — Understand our core beliefs and philosophy
+
+Then, review these foundational rules:
 - [`.agents/rules/rule-consistency.md`](.agents/rules/rule-consistency.md) — Folder structure, naming, dependencies
 - [`.agents/rules/rule-guard-lifecycle.md`](.agents/rules/rule-guard-lifecycle.md) — How to add new guards
 - [`.agents/rules/rule-contribution-workflow.md`](.agents/rules/rule-contribution-workflow.md) — PR flow
+- [`.agents/rules/rule-coderabbit-integration.md`](.agents/rules/rule-coderabbit-integration.md) — Automated PR Review Integration (Operational)
 
 ### The 5 Absolute Standards
 
@@ -57,7 +63,7 @@ Before writing any code, read:
 3. Ensure `npm test` passes locally
 4. Submit PR to `main`
 5. CI runs on 3 OS × 3 Node versions
-6. CodeRabbit automated review
+6. Automated Review Gateway (if configured)
 7. Maintainer review for breaking changes
 
 ## Code of Conduct

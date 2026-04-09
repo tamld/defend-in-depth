@@ -89,6 +89,14 @@ export interface SsotPollutionConfig {
   protectedPaths?: string[];
 }
 
+export interface RootPollutionConfig {
+  enabled: boolean;
+  /** Exact filenames allowed in the root directory */
+  allowedRootFiles?: string[];
+  /** Glob patterns for allowed root files (e.g. "*.md") */
+  allowedRootPatterns?: string[];
+}
+
 export interface CommitFormatConfig {
   enabled: boolean;
   /** Regex pattern for valid commit messages */
@@ -124,16 +132,24 @@ export interface TicketIdentityConfig {
   providerConfig?: Record<string, unknown>;
 }
 
+export interface HitlReviewConfig {
+  enabled: boolean;
+  /** Branches where direct commits are blocked, forcing PR workflow */
+  protectedBranches?: string[];
+}
+
 /** Root configuration loaded from defense.config.yml */
 export interface DefendConfig {
   version: string;
   guards: {
     hollowArtifact?: HollowArtifactConfig;
     ssotPollution?: SsotPollutionConfig;
+    rootPollution?: RootPollutionConfig;
     commitFormat?: CommitFormatConfig;
     branchNaming?: BranchNamingConfig;
     phaseGate?: PhaseGateConfig;
     ticketIdentity?: TicketIdentityConfig;
+    hitlReview?: HitlReviewConfig;
   };
 }
 

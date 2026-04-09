@@ -7,6 +7,8 @@
 
 ## Mission
 
+*For the complete philosophical foundation — the three cognitive branches, the DO/DON'T mandates, and the growth flywheel — see [COGNITIVE_TREE.md](.agents/philosophy/COGNITIVE_TREE.md).*
+
 **defense-in-depth** is a governance middleware layer that bridges AI coding agents
 into human/enterprise operational workflows.
 
@@ -58,10 +60,11 @@ Untagged findings are treated as `HYPO`.
 | Decision | Rationale |
 |:---|:---|
 | Guards never auto-merge PRs | Human judgment is irreplaceable for semantics |
-| CodeRabbit as first-pass reviewer | Reduces human review burden, not replaces it |
+| Automated Gateways as first-pass reviewer | Reduces human review burden, not replaces it |
 | Phase gates require plan files | Prevents "code first, think later" |
 
 **Implication for agents:** You are NOT autonomous. You propose. Humans approve.
+*For automated first-pass reviews, refer to internal operational rules like [rule-coderabbit-integration.md](.agents/rules/rule-coderabbit-integration.md) to handle feedback metadata.*
 
 ### 5. Growth Engine (Future)
 
@@ -107,7 +110,7 @@ See `docs/vision/meta-architecture.md` for the full vision.
 | Phase | Version | Focus | Key Types |
 |:---|:---:|:---|:---|
 | **Foundation** | v0.1 | Core guards + CLI + OSS + prebuilt configs | `Guard`, `Severity`, `Finding` |
-| **Ecosystem** | v0.2 | `.agents/` scaffold + 18 rules + 5 skills | `GuardContext`, config schema |
+| **Ecosystem** | v0.2 | `.agents/` scaffold + 19 rules + 5 skills | `GuardContext`, config schema |
 | **Identity** | v0.3 | Ticket-aware guards (TKID Lite) | `TicketRef` |
 | **Memory** | v0.4 | Lesson recording + growth metrics | `Lesson`, `GrowthMetric` |
 | **Intelligence** | v0.5 | DSPy adapter + semantic evaluation | `EvaluationScore` |
@@ -116,12 +119,13 @@ See `docs/vision/meta-architecture.md` for the full vision.
 | **Telemetry Sync** | v0.8 | Bidirectional Internal ↔ OSS data flow | `TelemetryPayload` |
 | **Stable** | v1.0 | Public API freeze + npm publish | All types frozen |
 
-**Status Update (v0.3)**: Foundation (v0.1) and Ecosystem (v0.2) shipped. Identity (v0.3) **in progress**:
+**Status Update (v0.4)**: Foundation (v0.1), Ecosystem (v0.2), Identity (v0.3) shipped. Memory Layer & Root Pollution Guard (v0.4) **in progress**:
 
 - `TicketRef` added to `GuardContext` — engine extracts TKID from branch name, commit message, or directory name.
 - `TicketIdentityGuard` enforces non-contradiction: if branch declares TKID `TK-xxx`, commit must not reference a *different* ticket. Severity: `WARN` (advisory, not blocking).
 - **Key architectural insight**: Git worktree IS the Dependency Injection mechanism. `DefendEngine(projectRoot)` receives CWD as the scope boundary. All git operations (`branch`, `staged files`, `config`) resolve relative to this root. When an AAOS worktree (`.worktrees/TK-xxx/`) is the CWD, identity and isolation come free from Git. When a standalone project is the CWD, the same code works without modification. **Zero lock-in by design.**
 - **Lesson**: `.worktrees` path was initially hardcoded in `extractTicketRef` — removed. Branch name is the canonical TKID source; directory name is a generic fallback.
+- **Review Ecosystem Enhancement**: End-user Gateway profiles should align with AAOS guidelines, integrating assertive architectural analysis and preserving the Git-ignored `.agents/records/reviews/` flow.
 
 Each phase builds on the previous. Agents MUST NOT implement v0.4 features during v0.3 work unless explicitly tasked.
 

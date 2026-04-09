@@ -2,6 +2,7 @@
 
 > **SYSTEM DIRECTIVE**: This file is auto-loaded by all AI agents operating in this project.
 > It is the ROOT of all governance. Read this FIRST.
+> Executor: Gemini-CLI
 
 ---
 
@@ -12,7 +13,7 @@
 **Purpose**: Git-based governance hooks for AI coding agents
 **Parent**: Extracted from an internal autonomous core system
 **Runtime**: TypeScript strict / Node.js ≥18 / CLI-first
-**Status**: Active Development (v0.3 — TKID Lite in progress)
+**Status**: Active Development (v0.4 — Memory Layer & Root Pollution Guard)
 
 ### What This Project IS
 - A lightweight governance middleware that runs as Git hooks
@@ -55,7 +56,7 @@ These are non-negotiable. No PR, no contributor, no agent may violate:
 | Configuration schema | `docs/user-guide/configuration.md` |
 | CLI commands | `docs/user-guide/cli-reference.md` |
 | Architecture deep-dive | `docs/dev-guide/architecture.md` |
-| Agent API Boundaries | `docs/agents/guard-interface.md`, `docs/agents/provider-interface.md` |
+| Agent Workspace Rules | `docs/dev-guide/agent-workspace-guidelines.md` |
 | Rules & standards | `.agents/rules/` directory |
 | Strategic direction | `STRATEGY.md` |
 | CI/CD | `.github/workflows/ci.yml` |
@@ -98,6 +99,8 @@ defense-in-depth/
 │   ├── dev-guide/          # For developers (architecture, guard authoring)
 │   ├── quickstart.md       # 60-second onboarding
 │   └── vision/             # Meta architecture
+│       ├── meta-architecture.md  # Vision documents
+│       └── system-blueprint.md   # Unified connection mapping
 ├── templates/              # Shipped templates
 ├── .agents/                # Governance ecosystem
 ├── .github/                # CI + issue/PR templates
