@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.5.0] — DSPy Semantic Foundation - 2026-04-09
+
+### Added
+- `SemanticQualityGuard` implemented to check semantic depth of artifacts, supplementing mechanics-based `hollow-artifact` guards.
+- **Opt-in CLI Semantic Provider Pattern** (`CliCommandSemanticProvider`): Integrates with external evaluation engines (like DSPy or LLMs) neutrally via Unix standard streams (`stdio`), enforcing a pure Zero-Dependency / CLI-First architecture.
+- Added `semanticQuality` config in `defense.config.yml` that delegates the evaluation to a CLI runner (e.g., `ag dspy evaluate`).
+- Defined boundaries for artifact evaluation based on context availability (TKID vs. standalone OSS logic).
+
+---
+
 ## [0.4.0] — Memory Layer & Growth Tracking - 2026-04-09
 
 ### Added

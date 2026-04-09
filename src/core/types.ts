@@ -143,6 +143,7 @@ export interface DefendConfig {
     branchNaming?: BranchNamingConfig;
     phaseGate?: PhaseGateConfig;
     ticketIdentity?: TicketIdentityConfig;
+    semanticQuality?: SemanticQualityConfig;
   };
 }
 
@@ -220,11 +221,33 @@ export interface Lesson {
 /** v0.5: Quality evaluation score — interface for DSPy/LLM evaluators */
 export interface EvaluationScore {
   artifactPath: string;
-  score: number;
-  maxScore: number;
-  evaluator: string;
-  dimensions?: Record<string, number>;
-  feedback?: string;
+  score: number; // 0.0 to 1.0
+  reasoning: string;
+  evidenceTags: string[];
+}
+
+/** 
+ * v0.5: Semantic Provider Interface 
+ * Opt-in interface for handling DSPy or external semantic checks.
+ */
+export interface SemanticProvider {
+  /**
+   * Evaluate an artifact against specific criteria defined by the engine/ticket
+   */
+  evaluateArtifact(content: string, criteria: string, artifactPath: string): Promise<EvaluationScore>;
+}
+
+/** v0.5: Semantic Quality Guard configuration */
+export interface SemanticQualityConfig {
+  enabled: boolean;
+  /** Provider format: "cli-command" | "local-mcp" | "none" */
+  provider?: "cli-command" | "local-mcp" | "none";
+  /** Provider configuration mapping */
+  providerConfig?: Record<string, unknown>;
+  /** Minimum score required to pass (0.0 - 1.0) */
+  minScoreThreshold?: number;
+  /** Timeout in ms to fallback open, making the guard non-blocking */
+  timeoutMs?: number;
 }
 
 /** v0.4: Growth metric — tracks system learning velocity */
