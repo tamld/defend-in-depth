@@ -132,6 +132,12 @@ export interface TicketIdentityConfig {
   providerConfig?: Record<string, unknown>;
 }
 
+export interface HitlReviewConfig {
+  enabled: boolean;
+  /** Branches where direct commits are blocked, forcing PR workflow */
+  protectedBranches?: string[];
+}
+
 /** Root configuration loaded from defense.config.yml */
 export interface DefendConfig {
   version: string;
@@ -143,6 +149,7 @@ export interface DefendConfig {
     branchNaming?: BranchNamingConfig;
     phaseGate?: PhaseGateConfig;
     ticketIdentity?: TicketIdentityConfig;
+    hitlReview?: HitlReviewConfig;
   };
 }
 

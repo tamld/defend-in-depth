@@ -8,6 +8,8 @@
 |:---|:---:|:---:|:---|
 | **Hollow Artifact** | ✅ ON | BLOCK | Files with only `TODO`, `TBD`, empty templates |
 | **SSoT Pollution** | ✅ ON | BLOCK | Config/state files modified in feature branches |
+| **Root Pollution** | ✅ ON | BLOCK | Unapproved files or folders created in the project root |
+| **HITL Review** | ✅ ON | BLOCK | Direct commits/pushes to protected branches (main) |
 | **Commit Format** | ✅ ON | WARN | Non-conventional commit messages |
 | **Branch Naming** | ❌ OFF | WARN | Branch names not matching pattern |
 | **Phase Gate** | ❌ OFF | BLOCK | Code committed without a plan file |
@@ -43,6 +45,16 @@ guards:
     protectedPaths:
       - ".agents/"
       - "records/"
+
+  # Prevents unauthorized files in the root ecosystem directory
+  rootPollution:
+    enabled: true
+    allowedRootFiles: ["README.md", "defense.config.yml", "package.json"]
+
+  # Blocks direct commits to protected branches like main natively
+  hitlReview:
+    enabled: true
+    protectedBranches: ["main", "master"]
 
   # Enforces Conventional Commits syntax
   commitFormat:
