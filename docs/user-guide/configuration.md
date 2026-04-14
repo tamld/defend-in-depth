@@ -88,7 +88,7 @@ guards:
 
 ## DSPy Semantic Evaluation (v0.5)
 
-The `hollowArtifact` guard can optionally use DSPy's LLM-as-Judge to evaluate artifact quality beyond simple pattern matching.
+The `hollowArtifact` guard can optionally use [DSPy](https://dspy.ai)'s LLM-as-Judge to evaluate artifact quality beyond simple pattern matching. DSPy is an open-source framework by [Stanford NLP](https://github.com/stanfordnlp/dspy) (MIT License).
 
 ### How It Works
 

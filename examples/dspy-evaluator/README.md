@@ -2,6 +2,17 @@
 
 > Sample server for Defense-in-Depth's semantic quality evaluation (v0.5).
 
+## Attribution
+
+This evaluator is built on top of [**DSPy**](https://dspy.ai) — a framework for programming (not prompting) language models, developed by [Stanford NLP](https://github.com/stanfordnlp/dspy).
+
+- **Homepage**: [https://dspy.ai](https://dspy.ai)
+- **GitHub**: [https://github.com/stanfordnlp/dspy](https://github.com/stanfordnlp/dspy)
+- **License**: MIT
+- **Citation**: Omar Khattab et al., *"DSPy: Compiling Declarative Language Model Calls into State-of-the-Art Pipelines"*, ICLR 2024.
+
+We thank the DSPy contributors for making this open-source framework available.
+
 ## What This Does
 
 When `useDspy: true` is set in `defense.config.yml`, the `hollow-artifact` guard sends artifacts to a DSPy HTTP endpoint for **LLM-as-Judge** evaluation. This directory provides a working reference implementation of that endpoint.

@@ -1,6 +1,9 @@
 """
 Defense-in-Depth — Reference DSPy Evaluator Service
 
+Built on DSPy (https://dspy.ai) by Stanford NLP — MIT License.
+See: https://github.com/stanfordnlp/dspy
+
 This is a sample FastAPI server that receives artifact content from DiD's
 hollow-artifact guard and returns a semantic quality score using DSPy's
 LLM-as-Judge pattern.
