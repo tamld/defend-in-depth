@@ -87,6 +87,7 @@ docker run -p 8080:8080 \
 ### `POST /evaluate`
 
 **Request:**
+
 ```json
 {
   "artifactPath": "docs/design.md",
@@ -95,6 +96,7 @@ docker run -p 8080:8080 \
 ```
 
 **Response:**
+
 ```json
 {
   "score": 0.85,
@@ -125,6 +127,7 @@ guards:
 ```
 
 Then run:
+
 ```bash
 npx defense-in-depth verify   # Uses DSPy during guard pipeline
 npx defense-in-depth eval <file>  # Standalone evaluation
@@ -137,6 +140,6 @@ npx defense-in-depth eval <file>  # Standalone evaluation
 | CI/CD hooks (fast) | ollama | llama3.2:1b | 2000ms |
 | Interactive CLI | gemini | gemini-2.5-flash | 5000ms |
 | PR quality gate | openai | gpt-4o-mini | 8000ms |
-| Deep code review | anthropic | claude-sonnet-4.5 | 15000ms |
+| Comprehensive code review | anthropic | claude-sonnet-4.5 | 15000ms |
 
 Executor: Gemini-CLI

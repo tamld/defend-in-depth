@@ -99,7 +99,7 @@ def _init_dspy() -> None:
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(_app: FastAPI):
     _init_dspy()
     log.info("DSPy evaluator ready on port %d (provider=%s)", PORT, PROVIDER)
     yield
@@ -133,7 +133,7 @@ async def evaluate(req: EvalRequest) -> EvalResponse:
         )
     except Exception as e:
         log.exception("Evaluation failed for %s", req.artifactPath)
-        raise HTTPException(status_code=500, detail=f"Evaluation failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Evaluation failed: {e!s}") from e
 
 
 @app.get("/health")
@@ -143,4 +143,4 @@ async def health():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=PORT)
+    uvicorn.run(app, host="0.0.0.0", port=PORT)  # noqa: S104

@@ -110,6 +110,7 @@ The `hollowArtifact` guard can optionally use [DSPy](https://dspy.ai)'s LLM-as-J
 A reference implementation is provided in [`examples/dspy-evaluator/`](../../examples/dspy-evaluator/).
 
 **Quick start with Ollama (free, local):**
+
 ```bash
 ollama pull llama3.2:3b
 cd examples/dspy-evaluator
@@ -118,6 +119,7 @@ python evaluator.py
 ```
 
 **With Google Gemini (free tier):**
+
 ```bash
 DSPY_PROVIDER=gemini DSPY_API_KEY=your_key python evaluator.py
 ```
