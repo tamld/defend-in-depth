@@ -4,11 +4,11 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import * as os from "node:os";
 
-import { hollowArtifactGuard } from "../src/guards/hollow-artifact.js";
-import { Severity } from "../src/core/types.js";
+import { hollowArtifactGuard } from "../dist/guards/hollow-artifact.js";
+import { Severity } from "../dist/core/types.js";
 
 // Utility to create a temporary workspace
-function createTempWorkspace(): { dir: string; cleanup: () => void } {
+function createTempWorkspace() {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "did-test-"));
   return {
     dir,
@@ -16,7 +16,7 @@ function createTempWorkspace(): { dir: string; cleanup: () => void } {
   };
 }
 
-let originalFetch: typeof globalThis.fetch;
+let originalFetch;
 
 test("Hollow Artifact Guard (v0.5)", async (t) => {
   t.beforeEach(() => {
@@ -46,7 +46,7 @@ test("Hollow Artifact Guard (v0.5)", async (t) => {
           }
         }
       }
-    } as any;
+    };
 
     const result = await hollowArtifactGuard.check(ctx);
     
@@ -80,7 +80,7 @@ test("Hollow Artifact Guard (v0.5)", async (t) => {
       config: {
         guards: { hollowArtifact: { useDspy: true, extensions: [".exe"] } }
       }
-    } as any;
+    };
 
     const result = await hollowArtifactGuard.check(ctx);
     
@@ -104,7 +104,7 @@ test("Hollow Artifact Guard (v0.5)", async (t) => {
       config: {
         guards: { hollowArtifact: { useDspy: true } }
       }
-    } as any;
+    };
 
     const result = await hollowArtifactGuard.check(ctx);
     
@@ -132,7 +132,7 @@ test("Hollow Artifact Guard (v0.5)", async (t) => {
       config: {
         guards: { hollowArtifact: { useDspy: true } }
       }
-    } as any;
+    };
 
     const result = await hollowArtifactGuard.check(ctx);
     
@@ -161,7 +161,7 @@ test("Hollow Artifact Guard (v0.5)", async (t) => {
       config: {
         guards: { hollowArtifact: { useDspy: true } }
       }
-    } as any;
+    };
 
     const result = await hollowArtifactGuard.check(ctx);
 
@@ -189,7 +189,7 @@ test("Hollow Artifact Guard (v0.5)", async (t) => {
       config: {
         guards: { hollowArtifact: { useDspy: true } }
       }
-    } as any;
+    };
 
     const result = await hollowArtifactGuard.check(ctx);
 
@@ -217,7 +217,7 @@ test("Hollow Artifact Guard (v0.5)", async (t) => {
       config: {
         guards: { hollowArtifact: { useDspy: true } }
       }
-    } as any;
+    };
 
     const result = await hollowArtifactGuard.check(ctx);
 
@@ -245,7 +245,7 @@ test("Hollow Artifact Guard (v0.5)", async (t) => {
       config: {
         guards: { hollowArtifact: { useDspy: true } }
       }
-    } as any;
+    };
 
     const result = await hollowArtifactGuard.check(ctx);
 
