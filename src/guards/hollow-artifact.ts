@@ -8,6 +8,7 @@
  *   - Files with TODO, TBD, FILL IN HERE, <Empty>, [Insert Here], PLACEHOLDER
  *   - Files with only markdown headers and no substantive body
  *   - Files below minimum content length threshold
+ *   - v0.5: Optionally, semantic quality below threshold (via DSPy adapter, opt-in)
  *
  * Pattern source: dspy-reflection-service.ts HOLLOW_PATTERNS + rule-reflection-taxonomy-guard.ts
  */
@@ -15,7 +16,11 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import type { Guard, GuardContext, GuardResult, Finding } from "../core/types.js";
-import { Severity } from "../core/types.js";
+import { Severity, EvidenceLevel } from "../core/types.js";
+
+// DSPy contract schema moved to src/core/dspy-client.ts
+// Re-export for backward compatibility
+export type { DSPyEvalResponse } from "../core/dspy-client.js";
 
 /** Default patterns that indicate hollow content */
 const DEFAULT_HOLLOW_PATTERNS = [
@@ -33,6 +38,12 @@ const DEFAULT_EXTENSIONS = [".md", ".json", ".yml", ".yaml"];
 /** Minimum meaningful content length (after stripping headers/whitespace) */
 const DEFAULT_MIN_CONTENT_LENGTH = 50;
 
+/** Default DSPy timeout */
+const DEFAULT_DSPY_TIMEOUT_MS = 5000;
+
+/** Hard-coded whitelist of semantic text extensions safely scannable by DSPy */
+const SEMANTIC_TEXT_EXTS = new Set([".md", ".json", ".js", ".ts", ".html", ".yml", ".yaml", ".txt"]);
+
 /**
  * Strip markdown headers, frontmatter, and whitespace to get "meaningful" content.
  */
@@ -44,6 +55,8 @@ function stripBoilerplate(content: string): string {
     .replace(/^\s*$/gm, "")               // Blank lines
     .trim();
 }
+
+// v0.5: Network call moved to src/core/engine.ts to keep guards pure.
 
 export const hollowArtifactGuard: Guard = {
   id: "hollowArtifact",
@@ -64,6 +77,9 @@ export const hollowArtifactGuard: Guard = {
       ? config.patterns.map((p) => new RegExp(p, "i"))
       : DEFAULT_HOLLOW_PATTERNS;
 
+    // v0.5: DSPy configuration (opt-in, disabled by default)
+    const useDspy = config?.useDspy === true;
+
     // Filter staged files to only check relevant extensions
     const filesToCheck = ctx.stagedFiles.filter((f) =>
       extensions.some((ext) => f.endsWith(ext)),
@@ -81,7 +97,7 @@ export const hollowArtifactGuard: Guard = {
         continue; // Can't read → skip
       }
 
-      // Check 1: Hollow patterns
+      // Check 1: Hollow patterns (deterministic, zero-infrastructure)
       for (const pattern of patterns) {
         if (pattern.test(content)) {
           findings.push({
@@ -116,6 +132,24 @@ export const hollowArtifactGuard: Guard = {
           fix: `Add meaningful content beneath the headers in ${relPath}.`,
         });
       }
+
+      // Check 4 (v0.5): DSPy semantic evaluation — opt-in only
+      const ext = path.extname(relPath).toLowerCase();
+      const isSemanticText = SEMANTIC_TEXT_EXTS.has(ext);
+
+      // Only runs when useDspy is true AND file passed deterministic checks AND file is a safe text type
+      if (useDspy && isSemanticText && !findings.some((f) => f.filePath === relPath && f.severity === Severity.BLOCK)) {
+        const dspyEval = ctx.semanticEvals?.dspy?.[relPath];
+        if (dspyEval && dspyEval.score < 0.5) {
+          findings.push({
+            guardId: "hollowArtifact",
+            severity: Severity.WARN,
+            message: `DSPy semantic score ${dspyEval.score.toFixed(2)}/1.0 for ${relPath}. ${dspyEval.feedback ?? ""}`,
+            filePath: relPath,
+            evidence: EvidenceLevel.RUNTIME,
+          });
+        }
+      }
     }
 
     const hasBlocking = findings.some((f) => f.severity === Severity.BLOCK);
@@ -128,3 +162,4 @@ export const hollowArtifactGuard: Guard = {
     };
   },
 };
+
