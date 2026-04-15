@@ -151,5 +151,13 @@ Each phase builds on the previous. Agents MUST NOT implement future-phase featur
 - **Bugs caught by TDD**: (1) `FileTicketProvider` leaked empty-string `parentId` through `!= null` check. (2) `HttpTicketProvider` silently dropped `parentId` from JSON responses. Both caught by edge/integration tests before release.
 - **Test suite**: 99 tests total, 37 federation-specific (17 guard unit, 8 HTTP provider, 6 file provider, 6 engine integration).
 
+**Multi-Agent Operations (v0.6.1)**: Established formal strategy for leveraging external AI tools alongside operational agents:
+
+- **Agent taxonomy**: Operational Agents (Main Agent — human-commanded, core builders) vs External Agents (Jules, CodeRabbit — third-party tools leveraged for optimization).
+- **Jules Integration**: External async builder for routine tasks (tests, bug fixes, docs). Constrained by `.agents/contracts/jules.md`. NOT a core dependency.
+- **CodeRabbit Hardening**: External PR reviewer. `.coderabbit.yaml` expanded with path instructions for `tests/**`, `docs/**`, `.agents/**`.
+- **Key clarification**: This multi-agent setup is DiD's **internal development strategy** for optimizing its own workflow. It is NOT a requirement imposed on DiD package users.
+- **Architectural insight**: The distinction between "operational agent" (trusted, human-commanded) and "external agent" (constrained, config-bounded) is itself a defense-in-depth principle applied to AI governance.
+
 ---
 
