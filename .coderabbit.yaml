@@ -25,8 +25,18 @@ reviews:
       instructions: "TicketStateProviders are the ONLY layer allowed to do I/O. Strictly ensure that every network call uses an AbortController for timeouts, and all async errors are caught and swallowed gracefully (returning undefined, NEVER throwing)."
     - path: "src/core/**"
       instructions: "Engine pipeline is critical. Check for error handling, crash protection, and type safety."
+    - path: "tests/**"
+      instructions: "Verify edge cases AND adversarial scenarios. If a test only covers happy path, flag it. Check: empty strings, null/undefined, timeout, malformed inputs, boundary values. Tests must be deterministic (no flaky timers or real network)."
+    - path: "docs/**"
+      instructions: "Check for accuracy against source code. Verify all code references point to real files/functions. Flag stale references. Ensure examples are runnable."
+    - path: ".agents/**"
+      instructions: "Governance files. Verify YAML frontmatter format (id, status, version, enforcement). Check Mermaid diagrams for syntax validity. These files define system behavior — extra scrutiny required."
   auto_review:
     enabled: true
     drafts: false
+  # Multi-Agent Governance: Jules PRs receive enhanced review
+  # Jules creates PRs on branches matching */jules-*
+  # CodeRabbit should apply extra scrutiny to agent-authored code
+  # See: .agents/contracts/jules.md for Jules boundary rules
 chat:
   auto_reply: true
