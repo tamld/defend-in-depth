@@ -25,6 +25,7 @@
     "build": "tsc",
     "dev": "tsc --watch",
     "test": "node --test",
+    "coverage": "node scripts/check-coverage.mjs",
     "lint": "tsc --noEmit",
     "prepublishOnly": "npm run build"
   },
