@@ -67,10 +67,11 @@ jobs:
             echo "Stable release — publishing under dist-tag 'latest'"
           fi
 
-      - name: Publish to npm (with provenance)
+      - name: Publish to npm (OIDC Trusted Publisher + provenance)
+        # No NODE_AUTH_TOKEN — auth is handled by GitHub Actions OIDC.
+        # Requires the package's npm "Trusted publishers" to be configured
+        # for tamld/defense-in-depth + .github/workflows/release.yml.
         run: npm publish --provenance --access public --tag ${{ steps.version.outputs.npm_tag }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
