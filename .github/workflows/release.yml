@@ -1,13 +1,19 @@
 name: Release
 
-# Triggers on annotated tags `vX.Y.Z`. Builds, tests, then publishes to npm
-# and creates a GitHub Release. The npm version on the published package
-# must match `package.json#version`; the workflow asserts this before publish.
+# Triggers on tags `vX.Y.Z` or `vX.Y.Z-<prerelease>`. Builds, tests, then
+# publishes to npm and creates a GitHub Release. The npm version on the
+# published package must match `package.json#version`; the workflow asserts
+# this before publish.
+#
+# Pre-release tags (any version containing a hyphen, e.g. v0.6.0-rc.1) are
+# published with the `next` npm dist-tag and marked prerelease on GitHub.
+# Stable tags (e.g. v0.6.0) go to the `latest` dist-tag.
 
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - 'v[0-9]+.[0-9]+.[0-9]+-*'
 
 permissions:
   contents: write   # to create GitHub Releases
@@ -41,7 +47,8 @@ jobs:
       - name: Type check
         run: npx tsc --noEmit
 
-      - name: Verify tag matches package.json version
+      - name: Verify tag matches package.json version, detect prerelease
+        id: version
         run: |
           TAG_VERSION="${GITHUB_REF_NAME#v}"
           PKG_VERSION=$(node -p "require('./package.json').version")
@@ -50,9 +57,18 @@ jobs:
             exit 1
           fi
           echo "Tag and package.json agree on $PKG_VERSION"
+          if [[ "$PKG_VERSION" == *"-"* ]]; then
+            echo "npm_tag=next" >> "$GITHUB_OUTPUT"
+            echo "prerelease=true" >> "$GITHUB_OUTPUT"
+            echo "Detected prerelease — publishing under dist-tag 'next'"
+          else
+            echo "npm_tag=latest" >> "$GITHUB_OUTPUT"
+            echo "prerelease=false" >> "$GITHUB_OUTPUT"
+            echo "Stable release — publishing under dist-tag 'latest'"
+          fi
 
       - name: Publish to npm (with provenance)
-        run: npm publish --provenance --access public
+        run: npm publish --provenance --access public --tag ${{ steps.version.outputs.npm_tag }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -60,6 +76,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
+          prerelease: ${{ steps.version.outputs.prerelease == 'true' }}
           body: |
             See `CHANGELOG.md` for the curated, human-written notes.
 
