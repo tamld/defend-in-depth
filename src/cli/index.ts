@@ -87,13 +87,21 @@ Commands:
   eval      Evaluate artifact quality with DSPy semantic analysis (v0.5, opt-in)
 
 Options:
-  --help    Show this help
-  --version Show version
+  --help            Show this help
+  --version         Show version
+
+Verify-only options:
+  --files <paths>   Verify the listed files instead of staged files
+  --hook <name>     Internal: invoked by Git hooks (pre-commit / pre-push)
+  --dry-run-dspy    Force-disable DSPy semantic evaluation for this run.
+                    Useful for verifying L1+L2 governance still passes when
+                    your DSPy endpoint is offline. Banner is written to stderr.
 
 Examples:
   npx defense-in-depth init
   npx defense-in-depth verify
   npx defense-in-depth verify --files src/app.ts docs/plan.md
+  npx defense-in-depth verify --dry-run-dspy
   npx defense-in-depth doctor
 
 Learn more: https://github.com/tamld/defense-in-depth

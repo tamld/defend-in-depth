@@ -406,6 +406,38 @@ be blocked by an unavailable AI service.
 
 ---
 
+## Testing your fallback (`--dry-run-dspy`)
+
+Before pushing a config change that enables `useDspy: true`, simulate the
+"DSPy offline" path locally so you can confirm your L1+L2 governance still
+passes without DSPy:
+
+```bash
+npx defense-in-depth verify --dry-run-dspy
+```
+
+The flag force-disables DSPy semantic enrichment for the current run only —
+no config file changes, no environment variables. A banner is written to
+**stderr** so it is easy to filter in CI logs:
+
+```
+⚠  --dry-run-dspy: DSPy semantic evaluation skipped
+```
+
+Recommended use cases:
+
+- **Pre-deploy check**: verify your repo passes verification when the DSPy
+  endpoint is unavailable (network outage, provider quota exceeded, etc.).
+- **CI smoke test**: run `verify --dry-run-dspy` as a separate job to prove
+  the deterministic governance layer is still authoritative.
+- **Debugging false WARNs**: isolate whether a finding came from DSPy
+  (disappears with `--dry-run-dspy`) or from the deterministic guards.
+
+The flag only affects the `verify` command. `eval <file>` still requires
+DSPy because semantic evaluation is its primary purpose.
+
+---
+
 ## See Also
 
 - [`docs/dev-guide/writing-guards.md`](writing-guards.md) — Guard authoring guide

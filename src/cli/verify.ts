@@ -4,15 +4,18 @@
  * Runs all enabled guards against staged files or specified paths.
  *
  * Usage:
- *   defense-in-depth verify                    # scan staged files
- *   defense-in-depth verify --files a.md b.ts  # scan specific files
- *   defense-in-depth verify --hook pre-commit   # called from hook
+ *   defense-in-depth verify                       # scan staged files
+ *   defense-in-depth verify --files a.md b.ts     # scan specific files
+ *   defense-in-depth verify --hook pre-commit     # called from hook
+ *   defense-in-depth verify --dry-run-dspy        # simulate DSPy unavailable
  */
 
 import { execSync } from "node:child_process";
 import { DefendEngine } from "../core/engine.js";
+import { loadConfig } from "../core/config-loader.js";
 import { allBuiltinGuards } from "../guards/index.js";
 import { Severity } from "../core/types.js";
+import type { DefendConfig } from "../core/types.js";
 
 export async function verify(
   projectRoot: string,
@@ -20,13 +23,15 @@ export async function verify(
 ): Promise<void> {
   const hookMode = args.includes("--hook");
   const hook = hookMode ? args[args.indexOf("--hook") + 1] : undefined;
+  const dryRunDspy = args.includes("--dry-run-dspy");
 
   // Get files to check
   let files: string[];
   const filesIdx = args.indexOf("--files");
 
   if (filesIdx !== -1) {
-    // Explicit file list
+    // Explicit file list — terminate at the next flag (so `--dry-run-dspy`
+    // appearing after `--files a.md` does not get treated as a path).
     files = args.slice(filesIdx + 1).filter((a) => !a.startsWith("--"));
   } else {
     // Default: staged files from Git
@@ -39,8 +44,22 @@ export async function verify(
     return;
   }
 
+  // --dry-run-dspy: load config and force-disable DSPy semantic enrichment so
+  // users can verify their L1+L2 governance still passes when DSPy is offline.
+  // Banner goes to stderr (predictable for CI output and shell redirection).
+  let config: DefendConfig | undefined;
+  if (dryRunDspy) {
+    config = loadConfig(projectRoot);
+    if (config.guards.hollowArtifact) {
+      config.guards.hollowArtifact.useDspy = false;
+    }
+    process.stderr.write(
+      "⚠  --dry-run-dspy: DSPy semantic evaluation skipped\n",
+    );
+  }
+
   // Build engine with all guards
-  const engine = new DefendEngine(projectRoot);
+  const engine = new DefendEngine(projectRoot, config);
   engine.useAll(allBuiltinGuards);
 
   // Get optional context
