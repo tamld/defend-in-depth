@@ -4,6 +4,34 @@
 
 Thank you for your interest in contributing! This project follows strict standards to maintain quality.
 
+---
+
+## Before You Open a PR
+
+> [!IMPORTANT]
+> **Comment your implementation plan on the issue BEFORE opening a PR.**
+> State which files you will modify, what specifically you will change, and how you
+> will verify it. A maintainer will respond within 48 hours. PRs opened without a
+> prior plan comment may be closed without review.
+
+### Scope discipline
+
+Read the issue's **acceptance criteria** in full — not just the title. Issues often
+have a scope update in the first maintainer comment. That comment overrides the
+original description.
+
+**Key rule: update existing SSoT, don't create new files.**
+Do not create new top-level `.md` files when the information belongs in an existing
+document (e.g., `README.md`, `SECURITY.md`). This fragments the documentation.
+
+| Ask yourself | Answer |
+|:---|:---|
+| Does this information belong in an existing file? | Update that file |
+| Is there already a doc covering this? | Link to it, don't duplicate |
+| Does the issue say to update README + SECURITY? | Do exactly that, nothing else |
+
+---
+
 ## Quick Start
 
 ```bash
