@@ -56,13 +56,15 @@ defense-in-depth is the lightweight OSS sibling.
 
 | Task | Read This |
 |:---|:---|
-| Write a new guard | `.agents/contracts/guard-interface.md` |
+| Write a new guard | `.agents/skills/skill-guard-governance/SKILL.md` |
 | Understand coding standards | `.agents/rules/rule-consistency.md` |
 | Task execution workflow | `.agents/workflows/procedure-task-execution.md` |
 | Project philosophy | `.agents/philosophy/COGNITIVE_TREE.md` |
 | Strategic direction | `STRATEGY.md` |
 | Meta architecture vision | `docs/vision/meta-architecture.md` |
 | Telemetry Protocol | `docs/telemetry.md` |
+| All agent skills | `.agents/skills/AGENTS.md` |
+| All docs (lazy-load) | `docs/index.md` |
 
 ---
 
@@ -77,8 +79,9 @@ store these key facts:
 - Guard interface: pure functions, no side effects, <100ms
 - Evidence tagging: CODE/RUNTIME/INFER/HYPO
 - Lesson schema requires wrongApproach + correctApproach (Án Lệ)
-- Zero external deps (only `yaml` in production)
+- Tier 0 core: zero external deps; Tier 1 (DSPy, federation): opt-in; Tier 2 (skills): lazy-load markdown
 - TypeScript strict mode, no `any` types
+- Tagline: "Zero to excellent: works out of the box, compounds with context."
 ```
 
 ---
@@ -90,6 +93,7 @@ Evidence > Plausibility    → Tag everything you verify
 Mechanism > Prompting      → Guards are code, not instructions
 Growth > Stasis            → Record lessons with wrongApproach
 HITL > Autonomy            → You serve human judgment
+Tier 0 > Tier 1 > Tier 2  → Core never requires deps; layers compound
 ```
 
 This file is a **router**, not a rulebook. All rules live in `.agents/rules/`.

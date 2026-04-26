@@ -20,17 +20,43 @@ into human/enterprise operational workflows.
 
 ## Strategic Pillars
 
-### 1. CLI-First, Zero-Infrastructure (Depends-On Philosophy)
+### 1. Progressive Enhancement Architecture
+
+The governance core **must** work with zero dependencies. Each optional layer
+**compounds** capability without making it mandatory.
+
+```
+Tier 0 — Deterministic Core (always available, zero deps)
+  Regex guards, length heuristics, CI gates, git hooks
+  → No network, no config, no prerequisites
+  → Guarantees: BLOCK/WARN on known patterns, everywhere
+
+Tier 1 — Optional Intelligence (plug in what you need)
+  DSPy semantic eval, quality gate, semantic search
+  → Single opt-in flag per feature, graceful degrade
+  → Guarantees: Better signal when available; Tier 0 holds when not
+
+Tier 2 — Agent Skills (plug in how you govern)
+  .agents/skills — lazy-loaded behavioral guidelines for AI contributors
+  → Never mandatory, never in the runtime path
+  → Guarantees: Consistent governance behavior across agents
+```
 
 | Decision | Rationale |
 |:---|:---|
-| Git hooks only | No servers, databases, or cloud services required by default |
-| `yaml` and `json` interfaces | Minimal attack surface, maximum portability |
-| Cross-platform CI (3 OS × 3 Node) | Must work everywhere agents work |
-| Pluggable Providers | Bridging to external systems (Jira, Linear) works via adapters, never bloated core |
+| Tier 0 never changes | Core guards are dependency-free and cross-platform by design |
+| Tier 1 is opt-in | DSPy, federation, telemetry — each requires an explicit config flag |
+| Tier 2 is lazy-loaded | Skills are read by agents, not executed by the engine |
+| No dep is "free" | Every dependency must justify its blast radius against Tier 0 integrity |
+| Pluggable Providers | External systems (Jira, Linear, parent projects) via adapters, never core |
 
-**Implication for agents:** Do NOT introduce external dependencies. If a feature
-requires infrastructure, it must be opt-in via a `TicketStateProvider` or similar extension, keeping the core lightweight.
+> **Project tagline**: *"Zero to excellent: works out of the box, compounds with context."*
+
+**Implication for agents:** Tier 0 is inviolable. When adding capability,
+first ask which Tier it belongs to. Tier 1 features must have `useDspy`/`enabled`
+guards. Tier 2 assets (skills, rules) must be lazy-loadable markdown — never
+imported by TypeScript source.
+
 
 ### 2. Guard Pipeline Architecture
 
@@ -116,6 +142,7 @@ See `docs/vision/meta-architecture.md` for the full vision.
 | **Intelligence** | v0.5 | DSPy adapter + semantic evaluation | `EvaluationScore` |
 | **Federation** | v0.6 | Parent↔child governance guards | `FederationGuardConfig`, `HttpTicketProvider` |
 | **Meta Memory** | v0.7 | Recall quality measurement | `LessonOutcome`, `RecallMetric` |
+| **Progressive Enhancement** | v0.7† | Philosophy reframe + `.agents/skills` + lazy-load docs | (scaffold only — no new types) |
 | **Meta Growth** | v0.8 | Growth acceleration tracking | `MetaGrowthSnapshot` |
 | **Telemetry Sync** | v0.9 | Bidirectional Internal ↔ OSS data flow | `TelemetryPayload` |
 | **Stable** | v1.0 | Public API freeze + npm publish | All types frozen |
@@ -167,6 +194,16 @@ Each phase builds on the previous. Agents MUST NOT implement future-phase featur
 - **Documentation Semantics**: Explicit `fail-fast-policy.md` added to clearly document engine behavior (collect-all vs fail-fast) ensuring strict system contracts (PR 11).
 - **Server-Side Enforcement**: Composite GitHub Action created to enforce governance rules server-side. Eliminates the gap of users bypassing local git hooks with `--no-verify`.
 - **Key architectural insight**: System robustness isn't just code; it's proven through deterministic, adversarial CI gates. We established a strict ceiling for dependencies by enforcing everything in purely native Node APIs.
+
+**Status Update (v0.7†) — Progressive Enhancement Architecture (Parallel Track)**:
+
+- **Philosophy Evolution**: Pillar #1 reframed from "Zero-Infrastructure" (a capability ceiling) to **"Progressive Enhancement Architecture"** — three-tier model where Tier 0 remains zero-dep, Tier 1 is opt-in intelligence, and Tier 2 is lazy-loaded agent skills.
+- **Project tagline**: *"Zero to excellent: works out of the box, compounds with context."* Replaces the previous *"Works without AI. Excels WITH AI."*
+- **`.agents/skills/` scaffold shipped**: 7 specialist skills for governance middleware work: `skill-guard-governance` (DiD-specific), `skill-threat-modeling-expert`, `skill-test-architect`, `skill-review-code`, `skill-surgical-refactorer`, `skill-devops-github-actions`, `skill-ai-dspy-validator`.
+- **Lazy-load documentation architecture**: `docs/index.md` as central navigation map; per-file "Read this when / Skip if / Related" headers on all dev-guide files.
+- **Agent bootstrap updated**: GEMINI.md, CLAUDE.md, and AGENTS.md updated to route agents to skills first; memory primer updated with Tier model.
+- **Key architectural insight**: Captain skills (AAOS-specific) are intentionally excluded — they couple to AAOS orchestration vocabulary that external agents (Devin, Jules, CodeRabbit) do not understand. Only portable, self-contained specialist skills are shipped.
+- **Design decision**: This track carries no TypeScript changes. Zero test suite impact. All changes are in `.agents/`, `docs/`, and agent config files.
 
 ---
 

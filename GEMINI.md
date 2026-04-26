@@ -51,12 +51,14 @@ that bridges AI agents into human/enterprise workflows.
 
 | Task | Read This |
 |:---|:---|
-| Write a new guard | `.agents/contracts/guard-interface.md` |
+| Write a new guard | `.agents/skills/skill-guard-governance/SKILL.md` |
 | Understand coding standards | `.agents/rules/rule-consistency.md` |
 | Task execution workflow | `.agents/workflows/procedure-task-execution.md` |
 | Project philosophy | `.agents/philosophy/COGNITIVE_TREE.md` |
 | Strategic direction | `STRATEGY.md` |
 | Meta architecture vision | `docs/vision/meta-architecture.md` |
+| All agent skills | `.agents/skills/AGENTS.md` |
+| All docs (lazy-load) | `docs/index.md` |
 
 ---
 
@@ -67,6 +69,9 @@ Evidence > Plausibility    → Tag everything you verify
 Mechanism > Prompting      → Guards are code, not instructions
 Growth > Stasis            → Record lessons with wrongApproach
 HITL > Autonomy            → You serve human judgment
+Tier 0 > Tier 1 > Tier 2  → Core never requires deps; layers compound
 ```
+
+> **Project tagline**: *"Zero to excellent: works out of the box, compounds with context."*
 
 This file is a **router**, not a rulebook. All rules live in `.agents/rules/`.

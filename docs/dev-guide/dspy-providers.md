@@ -5,7 +5,12 @@
 > DSPy inference backend so the guard can score artifact quality without requiring
 > paid infrastructure.
 
+> **Read this when**: You are enabling `useDspy: true` or setting up a DSPy server.  
+> **Skip if**: You are only using the default deterministic guards (no DSPy needed).  
+> **Related**: [fail-fast-policy.md](fail-fast-policy.md) · [SECURITY.md](../../SECURITY.md) · [`src/core/dspy-client.ts`](../../src/core/dspy-client.ts)
+
 ---
+
 
 ## Architecture: DSPy is NOT Mandatory
 

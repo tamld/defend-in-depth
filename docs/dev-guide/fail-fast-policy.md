@@ -5,6 +5,10 @@ version: 1.0.0
 audience: developers, contributors, agents writing new guards
 ---
 
+> **Read this when**: You are writing a new Guard or modifying `src/core/engine.ts`.  
+> **Skip if**: You only need to configure or use an existing guard.  
+> **Related**: [writing-guards.md](writing-guards.md) · [dspy-providers.md](dspy-providers.md) · [`src/core/engine.ts`](../../src/core/engine.ts)
+
 # Fail-Fast Policy
 
 > **TL;DR** — `defense-in-depth` is **NOT fail-fast at the pipeline level.** It is fail-fast at the *guard* level. The engine runs **every** registered guard, collects every finding, and returns one consolidated verdict. A single BLOCK anywhere yields `passed: false`. This is by design: users get the full picture in one run instead of fix-rerun-fix-rerun.
