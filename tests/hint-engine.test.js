@@ -24,24 +24,32 @@ import { spawnSync } from "node:child_process";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import * as os from "node:os";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const REPO_ROOT = path.resolve(__dirname, "..");
 
+// Dynamic import requires a file:// URL on Windows (CI runs on win-latest);
+// path.join produces "D:\\...\\hint-engine.js" which Node refuses with
+// ERR_UNSUPPORTED_ESM_URL_SCHEME (protocol 'd:'). pathToFileURL normalises
+// this on every platform.
 const {
   evaluateHints,
   listAllHints,
   DEFAULT_COOLDOWN_DAYS,
-} = await import(path.join(REPO_ROOT, "dist", "core", "hint-engine.js"));
+} = await import(
+  pathToFileURL(path.join(REPO_ROOT, "dist", "core", "hint-engine.js")).href
+);
 const {
   loadHintState,
   recordHintShown,
   dismissHint,
   resetHintState,
   hintStatePath,
-} = await import(path.join(REPO_ROOT, "dist", "core", "hint-state.js"));
+} = await import(
+  pathToFileURL(path.join(REPO_ROOT, "dist", "core", "hint-state.js")).href
+);
 
 let tmp;
 
