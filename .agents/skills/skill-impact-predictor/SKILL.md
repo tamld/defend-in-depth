@@ -87,12 +87,14 @@ Apply the rules in order; first match wins.
 
 | Rule | Risk |
 |:--|:--|
+| Direct target mutates the `Finding.severity` contract or registry shape | HIGH |
 | Direct target is a public-API file AND inbound consumers > 5 | HIGH |
 | Direct target is a Guard (`src/guards/*.ts`) with 0 strict-import tests | HIGH |
 | Direct target modifies an exported type/interface in `src/core/types.ts` | HIGH |
 | Inbound consumers (1st + 2nd degree) > 20 | MEDIUM |
-| Direct target mutates the `Finding.severity` contract or registry shape | HIGH |
 | All other cases | LOW |
+
+All HIGH rules are listed before any MEDIUM rule so that "first match wins" cannot let a lower severity shadow a non-negotiable HIGH. New HIGH conditions added in future revisions MUST stay above the MEDIUM row.
 
 The `Finding.severity` rule is non-negotiable per `SKILL_STANDARDS.md` §DiD-Specific Constraints — severity changes propagate to every CI gate consumer and to the federation child report shape.
 
