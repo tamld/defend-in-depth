@@ -27,7 +27,7 @@ paths = [
 # Gitleaks ships a default rule set; this file does not override it. Any
 # project-specific patterns (e.g. internal token formats) should be added as
 # additional `[[rules]]` blocks here, never by disabling the default set.
-id = "placeholder-do-not-remove"
-description = "Placeholder rule — keeps the file valid TOML even when no project-specific rules are active. Default gitleaks rules apply implicitly."
-regex = '''(?i)A_RULE_THAT_NEVER_MATCHES_BECAUSE_THIS_PROJECT_RELIES_ON_DEFAULTS_____'''
+id = "default-rules-only"
+description = "No-op rule — keeps the file valid TOML even when no project-specific rules are active. Default gitleaks rules apply implicitly."
+regex = '''(?i)NEVER_MATCHES_THIS_PROJECT_RELIES_ON_DEFAULT_GITLEAKS_RULES_____'''
 tags = ["meta"]
