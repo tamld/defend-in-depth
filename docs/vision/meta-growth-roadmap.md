@@ -528,7 +528,9 @@ did lesson forget plan [--since <date>]
 metaGrowth:
   thresholds:
     minLessonFieldChars: 50
-    placeholderTokens: ["TODO", "TBD", "FIXME", "???", "explanation here", "PLACEHOLDER"]
+    # Placeholder token list reuses the hollow-artifact guard's default
+    # patterns: see src/guards/hollow-artifact.ts (DEFAULT_HOLLOW_PATTERNS).
+    placeholderTokens: <inherit-from-hollow-artifact-guard>
 ```
 
 ### Acceptance criteria
@@ -623,7 +625,7 @@ This abort condition is a hard part of the roadmap. Building Track B against zer
 | B3 | v1.1.2 | B | 4 | 1, 5 | — |
 | B4 | v1.1.3 | B | 8 | 3 | — |
 | B5 | v1.1.4 | B | 2 | 1, 2, Tier 0 | — |
-| B6 | v1.2.0 (sketch) | B | TBD | TBD | — |
+| B6 | v1.2.0 (sketch) | B | deferred (B1–B5 field data required) | deferred | — |
 
 ---
 

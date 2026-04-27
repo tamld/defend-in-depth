@@ -313,7 +313,7 @@ Each line in `lessons.jsonl`:
   "consecutiveSnapshots": 3,
   "proposedLesson": {
     "wrongApproach": "string (auto-drafted)",
-    "correctApproach": "string (TODO — human fills)",
+    "correctApproach": "string (human-authored)",
     "tags": ["meta-growth", "smelter-auto"]
   },
   "status": "open" | "accepted" | "rejected",
