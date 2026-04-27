@@ -282,6 +282,8 @@ Combine this with branch-protection rules on `main` that require the
 | **Branch Naming** | ❌ OFF | WARN | Branch names not matching pattern |
 | **Phase Gate** | ❌ OFF | BLOCK | Code committed without a plan file |
 
+> **Note on DSPy:** The Hollow Artifact guard can use DSPy as an optional semantic layer (opt-in via config). When enabled, DSPy acts as an additive signal only (WARN-only) ensuring graceful degradation.
+
 ### Severity Levels
 
 | Level | Emoji | Effect |
@@ -493,7 +495,7 @@ These tools govern AI **while it reasons**. defense-in-depth governs AI **when i
 | **v0.2** | `.agents/` scaffold + 19 rules + 5 skills + lazy loading | `GuardContext`, config schema | ✅ Done |
 | **v0.3** | TKID Lite (file-based tickets) + trust-but-verify | `TicketRef` | ✅ Done |
 | **v0.4** | Memory Layer (`lessons.jsonl`) + growth metrics | `Lesson`, `GrowthMetric` | ✅ Done |
-| **v0.5** | DSPy adapter + semantic quality evaluation | `EvaluationScore` | ✅ Done |
+| **v0.5** | Optional DSPy semantic layer (opt-in, graceful degradation) + semantic quality evaluation | `EvaluationScore` | ✅ Done |
 | **v0.6** | Federation: Parent↔child governance guards | `FederationGuardConfig` | ✅ Done |
 | **v0.6.2** | Test & Operational Hardening (Coverage gates, End-to-End tests) | | ✅ Done |
 | **v0.7** | Meta Memory: recall quality measurement | `LessonOutcome`, `RecallMetric` | 📋 Designed |

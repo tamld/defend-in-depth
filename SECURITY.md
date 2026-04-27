@@ -18,7 +18,7 @@ opt-in features are enabled:
 
 | Feature | Introduced | Network Behavior |
 |---|---|---|
-| `hollowArtifact.useDspy` | v0.5 | POST to `dspyEndpoint` (default `http://localhost:8080/evaluate`). Default: disabled. |
+| `hollowArtifact.useDspy` | v0.5 | POST to `dspyEndpoint` (default `http://localhost:8080/evaluate`). Outbound call occurs ONLY upon explicit opt-in. Default: disabled. |
 | `HttpTicketProvider` | v0.6 | GET against `parentEndpoint` for ticket state resolution. Default: `file` provider, no network. |
 | `federation.parentEndpoint` | v0.6 | GET against parent project's resolution endpoint. Default: disabled. |
 

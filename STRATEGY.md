@@ -141,10 +141,10 @@ See `docs/vision/meta-architecture.md` for the full vision.
 | **Memory** | v0.4 | Lesson recording + growth metrics | `Lesson`, `GrowthMetric` |
 | **Intelligence** | v0.5 | DSPy adapter + semantic evaluation | `EvaluationScore` |
 | **Federation** | v0.6 | Parent↔child governance guards | `FederationGuardConfig`, `HttpTicketProvider` |
-| **Meta Memory** | v0.7 | Recall quality measurement | `LessonOutcome`, `RecallMetric` |
+| **Progressive Discovery** | v0.7 | Progressive Discovery UX (Persona A → B bridge) | `DiscoveryHint` |
 | **Progressive Enhancement** | v0.7† | Philosophy reframe + `.agents/skills` + lazy-load docs | (scaffold only — no new types) |
-| **Meta Growth** | v0.8 | Growth acceleration tracking | `MetaGrowthSnapshot` |
-| **Telemetry Sync** | v0.9 | Bidirectional Internal ↔ OSS data flow | `TelemetryPayload` |
+| **Meta Memory** | v0.8 | `did feedback`, F1 metrics, LessonOutcome | `LessonOutcome`, `RecallMetric` |
+| **Enterprise Meta** | v0.9 | Telemetry Sync, Meta Growth, Federation hardening | `TelemetryPayload`, `MetaGrowthSnapshot` |
 | **Stable** | v1.0 | Public API freeze + npm publish | All types frozen |
 
 **Status Update (v0.4)**: Foundation (v0.1), Ecosystem (v0.2), Identity (v0.3) shipped. Memory Layer & Root Pollution Guard (v0.4) **shipped**:
@@ -204,6 +204,13 @@ Each phase builds on the previous. Agents MUST NOT implement future-phase featur
 - **Agent bootstrap updated**: GEMINI.md, CLAUDE.md, and AGENTS.md updated to route agents to skills first; memory primer updated with Tier model.
 - **Key architectural insight**: Captain skills (AAOS-specific) are intentionally excluded — they couple to AAOS orchestration vocabulary that external agents (Devin, Jules, CodeRabbit) do not understand. Only portable, self-contained specialist skills are shipped.
 - **Design decision**: This track carries no TypeScript changes. Zero test suite impact. All changes are in `.agents/`, `docs/`, and agent config files.
+
+**Status Update (v0.7) — Progressive Discovery & Persona Realignment (Upcoming)**:
+
+- **Persona Realignment**: Acknowledged that ~80% of users are Solo Devs (Persona A) needing zero-config guards, while advanced features (DSPy, Lessons) serve AI Teams (Persona B) and Enterprise (Persona C).
+- **v0.7 Focus (Progressive Discovery)**: Build the UX bridge (`did doctor` or post-verify hints) to guide Persona A to discover Persona B features.
+- **v0.8 Focus (Meta Memory)**: Implement `did feedback` for F1 guard measurement and `LessonOutcome` to prove lesson usefulness.
+- **v0.9 Focus (Enterprise Meta)**: Defer Telemetry Export, MetaGrowthSnapshot, and Federation Hardening to v0.9, as these primarily serve Persona C.
 
 ---
 
