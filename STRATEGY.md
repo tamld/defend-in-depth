@@ -120,11 +120,12 @@ This is meta-prompting — not telling agents what to do, but teaching them how 
 
 | Layer | Type | What it measures |
 |:---|:---|:---|
-| 0: Guards | `Guard`, `Finding` | Is this commit clean? (SHIPPED) |
-| 1: Memory | `Lesson`, `GrowthMetric` | What did we learn? (SHIPPED) |
-| 2: Meta Memory | `LessonOutcome`, `RecallMetric` | Are lessons recalled and helpful? (DESIGNED) |
-| 3: Meta Growth | `MetaGrowthSnapshot` | Is the growth system improving? (DESIGNED) |
-| F: Federation | `TelemetryPayload` | Bidirectional Internal ↔ OSS data flow (SHIPPED) |
+| 0: Guards | `Guard`, `Finding` | Is this commit clean? (SHIPPED v0.1) |
+| 1: Memory | `Lesson`, `GrowthMetric` | What did we learn? (SHIPPED v0.4) |
+| 2: Meta Memory | `LessonOutcome`, `RecallMetric`, `RecallEvent`, `FeedbackEvent`, `GuardF1Metric` | Are lessons recalled and helpful? (SHIPPED MVP v0.7-rc.1; aggregation/F1 deferred to v1.1.x Track B) |
+| 3: Meta Growth | `MetaGrowthSnapshot` | Is the growth system improving? (DESIGNED v1.1.x — gated on Track A4 adoption exit) |
+| F: Federation guards | `FederationGuardConfig`, `HttpTicketProvider` | Parent↔child governance enforcement (SHIPPED v0.6) |
+| F: Telemetry Sync | `FederationPayload` | Bidirectional Internal ↔ OSS data flow (DESIGNED v0.9) |
 
 All types are published in `src/core/types.ts` — compiled, documented, importable.
 See `docs/vision/meta-architecture.md` for the full vision.
@@ -141,11 +142,12 @@ See `docs/vision/meta-architecture.md` for the full vision.
 | **Memory** | v0.4 | Lesson recording + growth metrics | `Lesson`, `GrowthMetric` |
 | **Intelligence** | v0.5 | DSPy adapter + semantic evaluation | `EvaluationScore` |
 | **Federation** | v0.6 | Parent↔child governance guards | `FederationGuardConfig`, `HttpTicketProvider` |
-| **Progressive Discovery** | v0.7 | Progressive Discovery UX (Persona A → B bridge) | `DiscoveryHint` |
+| **Progressive Discovery + Path A memory loop** | v0.7-rc.1 | Discovery UX (Persona A → B bridge) + `LessonOutcome` MVP | `Hint`, `HintState`, `LessonOutcome`, `RecallMetric`, `RecallEvent`, `FeedbackEvent`, `GuardF1Metric` |
 | **Progressive Enhancement** | v0.7† | Philosophy reframe + `.agents/skills` + lazy-load docs | (scaffold only — no new types) |
-| **Meta Memory** | v0.8 | `did feedback`, F1 metrics, LessonOutcome | `LessonOutcome`, `RecallMetric` |
-| **Enterprise Meta** | v0.9 | Telemetry Sync, Meta Growth, Federation hardening | `TelemetryPayload`, `MetaGrowthSnapshot` |
-| **Stable** | v1.0 | Public API freeze + npm publish | All types frozen |
+| **Track A1–A4 — Adoption track** | v0.7.x → v1.0 | Docs reconcile, guard breadth bump, API freeze, `npm latest` promo, 30-day bake. Gates Track B. | (no new types — release engineering) |
+| **Stable** | v1.0 | Public API freeze + `npm latest` GA | All types frozen |
+| **Meta Growth** | v1.1.x | F1 aggregator + Injection (Án Lệ) + Dedup + Forgetting + Quality Gate. Gated on Track A4 exit (≥10 external users + ≥100 captured events). | `MetaGrowthSnapshot` |
+| **Telemetry Sync / Enterprise** | v0.9 (renumber after v1.1.x lands) | Bidirectional Internal ↔ OSS data flow, Federation hardening | `FederationPayload` |
 
 **Status Update (v0.4)**: Foundation (v0.1), Ecosystem (v0.2), Identity (v0.3) shipped. Memory Layer & Root Pollution Guard (v0.4) **shipped**:
 
@@ -205,12 +207,15 @@ Each phase builds on the previous. Agents MUST NOT implement future-phase featur
 - **Key architectural insight**: Captain skills (AAOS-specific) are intentionally excluded — they couple to AAOS orchestration vocabulary that external agents (Devin, Jules, CodeRabbit) do not understand. Only portable, self-contained specialist skills are shipped.
 - **Design decision**: This track carries no TypeScript changes. Zero test suite impact. All changes are in `.agents/`, `docs/`, and agent config files.
 
-**Status Update (v0.7) — Progressive Discovery & Persona Realignment (Upcoming)**:
+**Status Update (v0.7-rc.1) — Progressive Discovery & Path A memory loop (SHIPPED)**:
+
+Released as [v0.7.0-rc.1](https://github.com/tamld/defense-in-depth/releases/tag/v0.7.0-rc.1) via PRs [#27](https://github.com/tamld/defense-in-depth/pull/27) (LessonOutcome MVP), [#28](https://github.com/tamld/defense-in-depth/pull/28) (Progressive Discovery hints + doctor/verify wiring) and [#31](https://github.com/tamld/defense-in-depth/pull/31) (release).
 
 - **Persona Realignment**: Acknowledged that ~80% of users are Solo Devs (Persona A) needing zero-config guards, while advanced features (DSPy, Lessons) serve AI Teams (Persona B) and Enterprise (Persona C).
-- **v0.7 Focus (Progressive Discovery)**: Build the UX bridge (`did doctor` or post-verify hints) to guide Persona A to discover Persona B features.
-- **v0.8 Focus (Meta Memory)**: Implement `did feedback` for F1 guard measurement and `LessonOutcome` to prove lesson usefulness.
-- **v0.9 Focus (Enterprise Meta)**: Defer Telemetry Export, MetaGrowthSnapshot, and Federation Hardening to v0.9, as these primarily serve Persona C.
+- **Progressive Discovery (shipped)**: `did doctor` and post-verify hints surface Persona B features without forcing Solo Dev users to opt in.
+- **Path A memory loop (shipped, MVP)**: `did feedback` records `LessonOutcome` events; outcome scanner produces `RecallMetric` and `GuardF1Metric` from accumulated events. **MVP scope only**: aggregation, dedup, forgetting, the Injection contract (Án Lệ with `wrongApproach` + `correctApproach`), and the Quality Gate are deferred to **Track B (v1.1.x)** per [`docs/vision/meta-growth-roadmap.md`](docs/vision/meta-growth-roadmap.md).
+- **Adoption track gate**: Track B is **hard-gated** behind Track A4 exit (≥10 external users + ≥100 captured events). Phases A1–A4 (issues #40–#42, plus the API pillar #33–#39 tracked under umbrella #42) MUST land before any Track B work begins.
+- **Telemetry Sync / Enterprise (`FederationPayload`)**: deferred until after v1.0 GA + Track A4 exit; renumbering to follow v1.1.x cadence.
 
 ---
 
