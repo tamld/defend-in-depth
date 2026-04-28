@@ -20,6 +20,7 @@ import type {
 } from "./types.js";
 import { Severity } from "./types.js";
 import { loadConfig } from "./config-loader.js";
+import { GuardCrashError } from "./errors.js";
 import { createProvider } from "../federation/index.js";
 import type { TicketStateProvider } from "../federation/types.js";
 import { callDspy } from "./dspy-client.js";
@@ -125,7 +126,15 @@ export class DefendEngine {
         const result = await guard.check(ctx);
         results.push(result);
       } catch (err) {
-        // Guard crashed — treat as hard BLOCK
+        // Guard crashed — wrap in a typed GuardCrashError, record a
+        // hard BLOCK finding, and continue. The pipeline never
+        // re-throws; the typed cause is reachable via the wrapped
+        // error's `.cause` for telemetry consumers.
+        const crash = new GuardCrashError(
+          `Guard crashed: ${err instanceof Error ? err.message : String(err)}`,
+          guard.id,
+          err,
+        );
         results.push({
           guardId: guard.id,
           passed: false,
@@ -133,7 +142,7 @@ export class DefendEngine {
             {
               guardId: guard.id,
               severity: Severity.BLOCK,
-              message: `Guard crashed: ${err instanceof Error ? err.message : String(err)}`,
+              message: crash.message,
             },
           ],
           durationMs: 0,

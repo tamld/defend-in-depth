@@ -16,6 +16,7 @@
 
 import type { TicketStateProvider, ProviderConfig } from "./types.js";
 import type { TicketRef } from "../core/types.js";
+import { ProviderError } from "../core/errors.js";
 
 /** Configuration options for HttpTicketProvider */
 export interface HttpProviderConfig extends ProviderConfig {
@@ -55,18 +56,22 @@ export class HttpTicketProvider implements TicketStateProvider {
         if (response.status === 404) {
           return undefined; // Ticket not found — silent skip
         }
-        console.warn(
-          `⚠ HttpTicketProvider: ${url} returned ${response.status}`,
+        const providerErr = new ProviderError(
+          `HttpTicketProvider: ${url} returned ${response.status}`,
+          this.name,
         );
+        console.warn(`⚠ ${providerErr.message}`);
         return undefined;
       }
 
       const raw: unknown = await response.json();
 
       if (!raw || typeof raw !== "object") {
-        console.warn(
-          `⚠ HttpTicketProvider: Invalid JSON response from ${url}`,
+        const providerErr = new ProviderError(
+          `HttpTicketProvider: Invalid JSON response from ${url}`,
+          this.name,
         );
+        console.warn(`⚠ ${providerErr.message}`);
         return undefined;
       }
 
@@ -109,7 +114,12 @@ export class HttpTicketProvider implements TicketStateProvider {
         : err instanceof Error
           ? err.message
           : String(err);
-      console.warn(`⚠ HttpTicketProvider: Failed to resolve ${ticketId}: ${reason}`);
+      const providerErr = new ProviderError(
+        `HttpTicketProvider: Failed to resolve ${ticketId}: ${reason}`,
+        this.name,
+        err,
+      );
+      console.warn(`⚠ ${providerErr.message}`);
       return undefined;
     }
   }

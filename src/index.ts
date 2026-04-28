@@ -63,3 +63,13 @@ export {
 // ─── Federation (v0.3 → v0.6) ───
 export { createProvider, FileTicketProvider, HttpTicketProvider } from "./federation/index.js";
 export type { TicketStateProvider } from "./federation/types.js";
+
+// ─── Typed errors (v1.0 — issue #37) ───
+export {
+  DiDError,
+  ConfigError,
+  GuardCrashError,
+  ProviderError,
+  ErrorCodes,
+} from "./core/errors.js";
+export type { DiDErrorCode } from "./core/errors.js";

@@ -56,11 +56,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Refactor
 - **Shared `src/core/jsonl-store.ts`** (#43, T1) — extracted the duplicated append-only JSONL primitives (id-based dedupe, time-window dedupe, line-by-line reader, malformed-line tolerance) from `feedback.ts` and `lesson-outcome.ts` into a single typed factory. Adds runtime field-by-field validation that replaces the previous `JSON.parse(line) as T` casts (Antigravity finding #4 on PR #32). External signatures of `appendFeedback`, `appendRecall`, `appendOutcome`, `readFeedback`, `readRecalls`, `readOutcomes` are unchanged — purely an implementation detail that is pinned by the contract tests added in #35. Patch-class per `docs/SEMVER.md` §4.
 
+### Added (typed errors — #37, MAJOR)
+- **`src/core/errors.ts`** — typed error hierarchy for programmatic handling. `DiDError` is the new base (extends `Error`); subclasses are `ConfigError` (code: `DID_CONFIG_INVALID`), `GuardCrashError` (code: `DID_GUARD_CRASH`, carries `.guardId`), and `ProviderError` (code: `DID_PROVIDER_FAIL`, carries `.providerName`). All subclasses preserve the original error on `.cause`. The `ErrorCodes` constant table exposes the stable string codes so consumers can branch on `err.code === ErrorCodes.CONFIG_INVALID` instead of parsing `.message`.
+- **`defense-in-depth/errors`** subpath export — same pattern as `/guards`, `/federation`, `/types` shipped in #62.
+- **17 new tests** covering instanceof + `.code` + `.guardId` / `.providerName` / `.configPath` / `.cause` plumbing, plus the `loadConfig` and `DefendEngine` integration paths.
+
+### Changed (typed errors — #37, BREAKING)
+- **`loadConfig()` now throws `ConfigError`** when the config file exists but cannot be parsed (YAML syntax error, non-mapping root, read failure). v0.x silently warned and fell back to `DEFAULT_CONFIG`. The zero-config path (no `defense.config.yml` present) is unchanged: `loadConfig()` still returns `DEFAULT_CONFIG`. Pinned by `tests/contract/public-api-contract.test.js` and the new `tests/errors.test.js` integration suite.
+- **Engine guard-crash handling** now constructs a typed `GuardCrashError` (with `.guardId` and `.cause`) before recording the BLOCK finding. The legacy `"Guard crashed: …"` finding-message prefix is preserved (pinned by `tests/engine.test.js`), so consumers reading the `Finding.message` are unaffected; consumers who want the typed cause now have a stable contract for it.
+- **Ticket-provider warnings** (`FileTicketProvider`, `HttpTicketProvider`) are now constructed via `ProviderError` so the warning text has a stable shape. Providers still NEVER throw — the federation graceful-degradation contract is preserved (pinned by `tests/contract/public-api-contract.test.js`).
+
 ### Migration
 
 No code or config changes are required for users on v0.6.0. The Composite
 Action is opt-in. The release workflow only fires on tag pushes, so it has
 no effect on the regular PR/main flow.
+
+The typed-error surface is additive for the runtime path of valid configs.
+The behavioural break is scoped to **invalid** `defense.config.yml` files —
+v0.x users who relied on silent warn-and-fallback should wrap `loadConfig`
+in `try/catch` and branch on `err instanceof ConfigError` /
+`err.code === "DID_CONFIG_INVALID"`. See
+`docs/migration/v0-to-v1.md#error-handling` for before/after snippets.
 
 ---
 

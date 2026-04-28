@@ -148,6 +148,12 @@ describe("public API barrel — module shape", () => {
       "createProvider",
       "FileTicketProvider",
       "HttpTicketProvider",
+      // Typed errors (issue #37, v1.0)
+      "DiDError",
+      "ConfigError",
+      "GuardCrashError",
+      "ProviderError",
+      "ErrorCodes",
     ]);
 
     const actual = new Set(Object.keys(publicApi));

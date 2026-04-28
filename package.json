@@ -25,6 +25,10 @@
       "types": "./dist/core/types.d.ts",
       "import": "./dist/core/types.js"
     },
+    "./errors": {
+      "types": "./dist/core/errors.d.ts",
+      "import": "./dist/core/errors.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [
