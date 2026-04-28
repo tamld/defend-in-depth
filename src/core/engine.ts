@@ -216,8 +216,18 @@ export class DefendEngine {
         }
       }
 
-      // Cleanup provider resources (DB connections, etc.)
-      await provider?.dispose?.();
+      // Cleanup provider resources (DB connections, etc.). Wrapped in
+      // try/catch like the guard dispose loop above — a custom
+      // TicketStateProvider may implement dispose() per
+      // src/federation/types.ts, and a throw here would abort the
+      // finally block and prevent the verdict from being computed.
+      try {
+        await provider?.dispose?.();
+      } catch (err) {
+        console.warn(
+          `⚠ Ticket provider dispose failed: ${err instanceof Error ? err.message : String(err)}`,
+        );
+      }
     }
 
     const durationMs = performance.now() - start;

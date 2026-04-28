@@ -352,6 +352,45 @@ describe("DefendEngine lifecycle — init crash semantics", () => {
   });
 });
 
+describe("DefendEngine lifecycle — provider dispose is also crash-safe", () => {
+  it("swallows errors thrown from provider.dispose() — verdict is unaffected, warn is logged", async () => {
+    const log = [];
+    const a = recordingGuard("a", log, { withInit: true, withDispose: true });
+    const engine = new DefendEngine(mkRoot(), makeConfig()).use(a);
+
+    // Inject a stub provider whose dispose() throws. This mirrors the
+    // path a custom TicketStateProvider implementation could take per
+    // src/federation/types.ts. The engine MUST swallow this — same
+    // contract as guard dispose — otherwise the verdict is unreachable
+    // because the throw escapes the finally block.
+    engine.enrichTicketRef = async () => ({
+      ticket: undefined,
+      provider: {
+        async getTicketState() {
+          return undefined;
+        },
+        async dispose() {
+          throw new Error("provider dispose blew up");
+        },
+      },
+    });
+
+    const verdict = await engine.run({ files: [] });
+
+    // Guard dispose still ran first (unchanged); provider dispose ran
+    // after, threw, was logged, and did not abort the verdict.
+    assert.deepStrictEqual(log, ["a:init", "a:check", "a:dispose"]);
+    assert.strictEqual(verdict.passed, true);
+    assert.strictEqual(verdict.failedGuards, 0);
+    assert.ok(
+      warnCalls.some((line) =>
+        /Ticket provider dispose failed.*provider dispose blew up/.test(line),
+      ),
+      `expected a console.warn about provider dispose failure, got: ${JSON.stringify(warnCalls)}`,
+    );
+  });
+});
+
 describe("DefendEngine lifecycle — disabled guards", () => {
   it("does NOT call init / check / dispose for guards disabled in config", async () => {
     const log = [];
