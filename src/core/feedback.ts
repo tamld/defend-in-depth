@@ -26,6 +26,15 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 
 import { computeF1 } from "./f1.js";
+import {
+  createJsonlStore,
+  getOptionalString,
+  getString,
+  isObjectWithId,
+  isStringEnum,
+  type JsonlSchema,
+  type JsonlStore,
+} from "./jsonl-store.js";
 import type { FeedbackEvent, GuardF1Metric } from "./types.js";
 
 const FEEDBACK_JSONL = ".agents/records/feedback.jsonl";
@@ -33,6 +42,50 @@ const SCRAPER_CURSOR = ".agents/state/feedback-scraper-cursor.json";
 const SCRAPER_VERSION = "scraper:v1";
 const FIXUP_WINDOW_MS = 4 * 60 * 60 * 1000;
 const REVERT_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
+
+// JSONL schema for `.agents/records/feedback.jsonl` (issue #43).
+const FEEDBACK_LABELS = ["TP", "FP", "FN", "TN"] as const;
+const FEEDBACK_SOURCES = [
+  "cli",
+  "scraper-fixup",
+  "scraper-revert",
+  "scraper-override",
+  "scraper-clean",
+] as const;
+
+const feedbackSchema: JsonlSchema<FeedbackEvent> = {
+  validate(raw: unknown): FeedbackEvent | null {
+    if (!isObjectWithId(raw)) return null;
+    const guardId = getString(raw, "guardId");
+    const ticketId = getString(raw, "ticketId");
+    const findingHash = getString(raw, "findingHash");
+    const label = isStringEnum(raw, "label", FEEDBACK_LABELS);
+    const source = isStringEnum(raw, "source", FEEDBACK_SOURCES);
+    const timestamp = getString(raw, "timestamp");
+    const executor = getString(raw, "executor");
+    const note = getOptionalString(raw, "note");
+    if (
+      guardId === null || ticketId === null || findingHash === null ||
+      label === null || source === null || timestamp === null ||
+      executor === null || note === null
+    ) return null;
+    const event: FeedbackEvent = {
+      id: raw.id as string,
+      guardId, ticketId, findingHash, label, source, timestamp, executor,
+    };
+    if (note !== undefined) event.note = note;
+    return event;
+  },
+  idOf: (e) => e.id,
+  timestampOf: (e) => e.timestamp,
+};
+
+function getFeedbackStore(projectRoot: string): JsonlStore<FeedbackEvent> {
+  return createJsonlStore<FeedbackEvent>(
+    path.resolve(projectRoot, FEEDBACK_JSONL),
+    feedbackSchema,
+  );
+}
 
 // ──────────────────────────────────────────────────────────────────────────
 // Hashing & ID
@@ -89,33 +142,17 @@ export interface AppendFeedbackResult {
  * Idempotent: if the event id already exists in the file, this is a no-op
  * and `written` is false. Callers (CLI, scraper) decide how to surface that
  * to the user — typically a stderr WARN.
+ *
+ * Implementation delegated to the shared {@link createJsonlStore} factory
+ * (issue #43) so the on-disk semantics + runtime validation match
+ * `lesson-outcome.ts` byte-for-byte.
  */
 export function appendFeedback(
   projectRoot: string,
   event: FeedbackEvent,
 ): AppendFeedbackResult {
-  const filePath = path.resolve(projectRoot, FEEDBACK_JSONL);
-  fs.mkdirSync(path.dirname(filePath), { recursive: true });
-
-  if (fs.existsSync(filePath)) {
-    const existing = fs.readFileSync(filePath, "utf-8");
-    for (const line of existing.split("\n")) {
-      if (!line.trim()) continue;
-      try {
-        const parsed = JSON.parse(line) as FeedbackEvent;
-        if (parsed.id === event.id) {
-          return { written: false, event: parsed, path: filePath };
-        }
-      } catch {
-        // Tolerate malformed lines; do not crash the writer over a corrupt
-        // historical entry.
-        continue;
-      }
-    }
-  }
-
-  fs.appendFileSync(filePath, JSON.stringify(event) + "\n", "utf-8");
-  return { written: true, event, path: filePath };
+  const result = getFeedbackStore(projectRoot).append(event);
+  return { written: result.written, event: result.event, path: result.path };
 }
 
 // ──────────────────────────────────────────────────────────────────────────
@@ -135,17 +172,15 @@ export interface ReadFeedbackOptions {
  * Read all matching {@link FeedbackEvent}s from disk. Returns `[]` when the
  * file does not exist (graceful — Persona A who never ran feedback gets an
  * empty list, not a crash).
+ *
+ * Implementation delegated to {@link createJsonlStore} (issue #43) — the
+ * `period` filter is feedback-specific so it lives here as a custom
+ * predicate; everything else (since/limit/runtime validation) is shared.
  */
 export function readFeedback(
   projectRoot: string,
   options: ReadFeedbackOptions = {},
 ): FeedbackEvent[] {
-  const filePath = path.resolve(projectRoot, FEEDBACK_JSONL);
-  if (!fs.existsSync(filePath)) return [];
-
-  const lines = fs.readFileSync(filePath, "utf-8").split("\n");
-  const events: FeedbackEvent[] = [];
-
   let periodStart: number | undefined;
   let periodEnd: number | undefined;
   if (options.period) {
@@ -155,32 +190,21 @@ export function readFeedback(
       periodEnd = Date.parse(parts[1]);
     }
   }
-  const sinceMs = options.since ? Date.parse(options.since) : undefined;
 
-  for (const line of lines) {
-    if (!line.trim()) continue;
-    let event: FeedbackEvent;
-    try {
-      event = JSON.parse(line) as FeedbackEvent;
-    } catch {
-      continue;
-    }
-
-    if (options.guardId && event.guardId !== options.guardId) continue;
-
-    if (periodStart !== undefined && periodEnd !== undefined) {
-      const ts = Date.parse(event.timestamp);
-      if (Number.isNaN(ts) || ts < periodStart || ts >= periodEnd) continue;
-    }
-    if (sinceMs !== undefined && !Number.isNaN(sinceMs)) {
-      const ts = Date.parse(event.timestamp);
-      if (Number.isNaN(ts) || ts < sinceMs) continue;
-    }
-
-    events.push(event);
-    if (options.limit !== undefined && events.length >= options.limit) break;
-  }
-  return events;
+  return getFeedbackStore(projectRoot).read({
+    since: options.since,
+    limit: options.limit,
+    filter: (event) => {
+      if (options.guardId && event.guardId !== options.guardId) return false;
+      if (periodStart !== undefined && periodEnd !== undefined) {
+        const ts = Date.parse(event.timestamp);
+        if (Number.isNaN(ts) || ts < periodStart || ts >= periodEnd) {
+          return false;
+        }
+      }
+      return true;
+    },
+  });
 }
 
 // ──────────────────────────────────────────────────────────────────────────

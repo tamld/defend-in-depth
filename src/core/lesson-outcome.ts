@@ -36,6 +36,15 @@ import {
   DEFAULT_DSPY_ENDPOINT,
   DEFAULT_DSPY_TIMEOUT_MS,
 } from "./dspy-client.js";
+import {
+  createJsonlStore,
+  getOptionalString,
+  getString,
+  isObjectWithId,
+  isStringEnum,
+  type JsonlSchema,
+  type JsonlStore,
+} from "./jsonl-store.js";
 
 const RECALLS_JSONL = ".agents/records/lesson-recalls.jsonl";
 const OUTCOMES_JSONL = ".agents/records/lesson-outcomes.jsonl";
@@ -44,6 +53,83 @@ const SCANNER_VERSION = "scanner:v1";
 export const RECALL_DEDUPE_WINDOW_MS = 60 * 60 * 1000;
 /** How far back the scanner looks for diffs after a recall (default 30d). */
 const SCAN_LOOKAHEAD_MS = 30 * 24 * 60 * 60 * 1000;
+
+// JSONL schemas for recalls + outcomes (issue #43).
+const RECALL_MATCH_METHODS = ["string", "semantic"] as const;
+const RECALL_SOURCES = ["search", "cli-explicit"] as const;
+const OUTCOME_SOURCES = [
+  "cli-explicit", "scanner-pattern-match", "scanner-no-match",
+] as const;
+
+const recallSchema: JsonlSchema<RecallEvent> = {
+  validate(raw: unknown): RecallEvent | null {
+    if (!isObjectWithId(raw)) return null;
+    const lessonId = getString(raw, "lessonId");
+    const ticketId = getString(raw, "ticketId");
+    const queryHash = getString(raw, "queryHash");
+    const matchMethod = isStringEnum(raw, "matchMethod", RECALL_MATCH_METHODS);
+    const source = isStringEnum(raw, "source", RECALL_SOURCES);
+    const timestamp = getString(raw, "timestamp");
+    const executor = getString(raw, "executor");
+    if (
+      lessonId === null || ticketId === null || queryHash === null ||
+      matchMethod === null || source === null || timestamp === null ||
+      executor === null
+    ) return null;
+    return {
+      id: raw.id as string,
+      lessonId, ticketId, queryHash, matchMethod, source, timestamp, executor,
+    };
+  },
+  idOf: (e) => e.id,
+  timestampOf: (e) => e.timestamp,
+};
+
+const outcomeSchema: JsonlSchema<LessonOutcome> = {
+  validate(raw: unknown): LessonOutcome | null {
+    if (!isObjectWithId(raw)) return null;
+    const recallId = getString(raw, "recallId");
+    const lessonId = getString(raw, "lessonId");
+    const source = isStringEnum(raw, "source", OUTCOME_SOURCES);
+    const timestamp = getString(raw, "timestamp");
+    const executor = getString(raw, "executor");
+    const matchedPattern = getOptionalString(raw, "matchedPattern");
+    const note = getOptionalString(raw, "note");
+    if (
+      recallId === null || lessonId === null || source === null ||
+      timestamp === null || executor === null ||
+      matchedPattern === null || note === null
+    ) return null;
+    // `helpful: boolean | null` — must be one of the three; absent is invalid.
+    const r = raw as Record<string, unknown>;
+    if (!("helpful" in r)) return null;
+    const helpful = r.helpful;
+    if (helpful !== true && helpful !== false && helpful !== null) return null;
+    const event: LessonOutcome = {
+      id: raw.id as string,
+      recallId, lessonId, helpful, source, timestamp, executor,
+    };
+    if (matchedPattern !== undefined) event.matchedPattern = matchedPattern;
+    if (note !== undefined) event.note = note;
+    return event;
+  },
+  idOf: (e) => e.id,
+  timestampOf: (e) => e.timestamp,
+};
+
+function getRecallStore(projectRoot: string): JsonlStore<RecallEvent> {
+  return createJsonlStore<RecallEvent>(
+    path.resolve(projectRoot, RECALLS_JSONL),
+    recallSchema,
+  );
+}
+
+function getOutcomeStore(projectRoot: string): JsonlStore<LessonOutcome> {
+  return createJsonlStore<LessonOutcome>(
+    path.resolve(projectRoot, OUTCOMES_JSONL),
+    outcomeSchema,
+  );
+}
 
 // ──────────────────────────────────────────────────────────────────────────
 // Hashing & ID
@@ -129,50 +215,19 @@ export function appendRecall(
   event: RecallEvent,
   options: AppendRecallOptions = {},
 ): AppendRecallResult {
-  const filePath = path.resolve(projectRoot, RECALLS_JSONL);
-  fs.mkdirSync(path.dirname(filePath), { recursive: true });
-
   const windowMs = options.dedupeWindowMs ?? RECALL_DEDUPE_WINDOW_MS;
-  const incomingTs = Date.parse(event.timestamp);
-
-  if (fs.existsSync(filePath)) {
-    const existing = fs.readFileSync(filePath, "utf-8");
-    for (const line of existing.split("\n")) {
-      if (!line.trim()) continue;
-      let parsed: RecallEvent;
-      try {
-        parsed = JSON.parse(line) as RecallEvent;
-      } catch {
-        continue;
-      }
-      if (parsed.id === event.id) {
-        return { written: false, event: parsed, path: filePath };
-      }
-      if (
-        !Number.isNaN(incomingTs) &&
-        parsed.lessonId === event.lessonId &&
-        parsed.ticketId === event.ticketId &&
-        parsed.queryHash === event.queryHash &&
-        parsed.matchMethod === event.matchMethod
-      ) {
-        const otherTs = Date.parse(parsed.timestamp);
-        if (
-          !Number.isNaN(otherTs) &&
-          Math.abs(incomingTs - otherTs) <= windowMs
-        ) {
-          return {
-            written: false,
-            event: parsed,
-            path: filePath,
-            windowDeduped: true,
-          };
-        }
-      }
-    }
-  }
-
-  fs.appendFileSync(filePath, JSON.stringify(event) + "\n", "utf-8");
-  return { written: true, event, path: filePath };
+  const result = getRecallStore(projectRoot).appendWithWindow(event, {
+    windowMs,
+    windowKeyOf: (e) =>
+      `${e.lessonId}|${e.ticketId}|${e.queryHash}|${e.matchMethod}`,
+  });
+  const out: AppendRecallResult = {
+    written: result.written,
+    event: result.event,
+    path: result.path,
+  };
+  if (result.windowDeduped) out.windowDeduped = true;
+  return out;
 }
 
 /**
@@ -184,26 +239,8 @@ export function appendOutcome(
   projectRoot: string,
   event: LessonOutcome,
 ): AppendOutcomeResult {
-  const filePath = path.resolve(projectRoot, OUTCOMES_JSONL);
-  fs.mkdirSync(path.dirname(filePath), { recursive: true });
-
-  if (fs.existsSync(filePath)) {
-    const existing = fs.readFileSync(filePath, "utf-8");
-    for (const line of existing.split("\n")) {
-      if (!line.trim()) continue;
-      try {
-        const parsed = JSON.parse(line) as LessonOutcome;
-        if (parsed.id === event.id) {
-          return { written: false, event: parsed, path: filePath };
-        }
-      } catch {
-        continue;
-      }
-    }
-  }
-
-  fs.appendFileSync(filePath, JSON.stringify(event) + "\n", "utf-8");
-  return { written: true, event, path: filePath };
+  const result = getOutcomeStore(projectRoot).append(event);
+  return { written: result.written, event: result.event, path: result.path };
 }
 
 // ──────────────────────────────────────────────────────────────────────────
@@ -222,29 +259,15 @@ export function readRecalls(
   projectRoot: string,
   options: ReadRecallsOptions = {},
 ): RecallEvent[] {
-  const filePath = path.resolve(projectRoot, RECALLS_JSONL);
-  if (!fs.existsSync(filePath)) return [];
-  const lines = fs.readFileSync(filePath, "utf-8").split("\n");
-  const sinceMs = options.since ? Date.parse(options.since) : undefined;
-  const out: RecallEvent[] = [];
-  for (const line of lines) {
-    if (!line.trim()) continue;
-    let event: RecallEvent;
-    try {
-      event = JSON.parse(line) as RecallEvent;
-    } catch {
-      continue;
-    }
-    if (options.lessonId && event.lessonId !== options.lessonId) continue;
-    if (options.ticketId && event.ticketId !== options.ticketId) continue;
-    if (sinceMs !== undefined && !Number.isNaN(sinceMs)) {
-      const ts = Date.parse(event.timestamp);
-      if (Number.isNaN(ts) || ts < sinceMs) continue;
-    }
-    out.push(event);
-    if (options.limit !== undefined && out.length >= options.limit) break;
-  }
-  return out;
+  return getRecallStore(projectRoot).read({
+    since: options.since,
+    limit: options.limit,
+    filter: (event) => {
+      if (options.lessonId && event.lessonId !== options.lessonId) return false;
+      if (options.ticketId && event.ticketId !== options.ticketId) return false;
+      return true;
+    },
+  });
 }
 
 export interface ReadOutcomesOptions {
@@ -257,24 +280,14 @@ export function readOutcomes(
   projectRoot: string,
   options: ReadOutcomesOptions = {},
 ): LessonOutcome[] {
-  const filePath = path.resolve(projectRoot, OUTCOMES_JSONL);
-  if (!fs.existsSync(filePath)) return [];
-  const lines = fs.readFileSync(filePath, "utf-8").split("\n");
-  const out: LessonOutcome[] = [];
-  for (const line of lines) {
-    if (!line.trim()) continue;
-    let event: LessonOutcome;
-    try {
-      event = JSON.parse(line) as LessonOutcome;
-    } catch {
-      continue;
-    }
-    if (options.recallId && event.recallId !== options.recallId) continue;
-    if (options.lessonId && event.lessonId !== options.lessonId) continue;
-    out.push(event);
-    if (options.limit !== undefined && out.length >= options.limit) break;
-  }
-  return out;
+  return getOutcomeStore(projectRoot).read({
+    limit: options.limit,
+    filter: (event) => {
+      if (options.recallId && event.recallId !== options.recallId) return false;
+      if (options.lessonId && event.lessonId !== options.lessonId) return false;
+      return true;
+    },
+  });
 }
 
 // ──────────────────────────────────────────────────────────────────────────
