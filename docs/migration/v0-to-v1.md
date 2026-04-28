@@ -284,6 +284,47 @@ The engine still records a BLOCK finding with the legacy `"Guard crashed: …"` 
 
 `FileTicketProvider` and `HttpTicketProvider` still NEVER throw to the caller (this is the federation graceful-degradation contract pinned by `tests/contract/public-api-contract.test.js`). v1.0 wraps their failure messages in a `ProviderError` instance for shape stability, but the public observable is identical: provider returns `undefined`, engine warns to stderr, pipeline continues.
 
+### 6.5 `engine.run()` — positional → options object (v1.0, BREAKING)
+
+v1.0 retires the positional `(stagedFiles, options?)` signature in favour of a single options object. This frees the API from the staged-only model baked into v0.x and reserves named slots for future execution modes (`mode: "staged" | "full" | "patch"`, `dryRun: boolean`).
+
+The new shape is exported from the barrel as `EngineRunOptions`:
+
+```typescript
+import type { EngineRunOptions } from "defense-in-depth";
+
+interface EngineRunOptions {
+  files: string[];
+  mode?: "staged" | "full" | "patch"; // reserved — not yet wired
+  commitMessage?: string;
+  branch?: string;
+  dryRun?: boolean;                    // reserved — not yet wired
+}
+```
+
+**Before (v0.x):**
+
+```typescript
+const verdict = await engine.run(stagedFiles, {
+  branch: "feat/TK-123",
+  commitMessage: "feat: add foo",
+});
+```
+
+**After (v1.0):**
+
+```typescript
+const verdict = await engine.run({
+  files: stagedFiles,
+  branch: "feat/TK-123",
+  commitMessage: "feat: add foo",
+});
+```
+
+This is a clean break — no shim. The legacy positional form will fail TypeScript compilation against the v1.0 typings. CLI consumers (`npx defense-in-depth verify`) are unaffected; the CLI was migrated in the same PR (#50).
+
+The `mode` and `dryRun` fields are accepted on the type but currently have **no runtime effect**. They are reserved for follow-up work that adds full-tree scans and side-effect-free dry runs (also tracked under #50). Setting them today is forward-compatible — readers will start consuming them in a later release without breaking your call site.
+
 ---
 
 ## 7. Recommended Upgrade Steps

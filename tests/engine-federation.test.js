@@ -132,7 +132,7 @@ describe("DefendEngine: Federation Orchestration (FE.01-04)", () => {
     };
 
     const engine = new DefendEngine(dummyRoot, createMockConfig(false)).use(federationGuard);
-    const result = await engine.run(["src/index.ts"], { branch: "feat/TK-CHILD" });
+    const result = await engine.run({ files: ["src/index.ts"], branch: "feat/TK-CHILD" });
 
     assert.equal(parentFetched, false, "Should not resolve parent if federation is disabled");
     // Federation guard is skipped by engine because enabled: false
@@ -150,7 +150,7 @@ describe("DefendEngine: Federation Orchestration (FE.01-04)", () => {
     );
 
     const engine = new DefendEngine(dummyRoot, createMockConfig(true)).use(federationGuard);
-    const result = await engine.run(["src/index.ts"], { branch: "feat/TK-CHILD" });
+    const result = await engine.run({ files: ["src/index.ts"], branch: "feat/TK-CHILD" });
 
     const fedGuardResult = result.results.find((r) => r.guardId === "federation");
     assert.ok(fedGuardResult, "Federation guard should run");
@@ -169,7 +169,7 @@ describe("DefendEngine: Federation Orchestration (FE.01-04)", () => {
     );
 
     const engine = new DefendEngine(dummyRoot, createMockConfig(true)).use(federationGuard);
-    const result = await engine.run(["src/index.ts"], { branch: "feat/TK-CHILD" });
+    const result = await engine.run({ files: ["src/index.ts"], branch: "feat/TK-CHILD" });
 
     const fedGuardResult = result.results.find((r) => r.guardId === "federation");
     assert.ok(fedGuardResult, "Federation guard should run");
@@ -191,7 +191,7 @@ describe("DefendEngine: Federation Orchestration (FE.01-04)", () => {
     );
 
     const engine = new DefendEngine(dummyRoot, createMockConfig(true)).use(federationGuard);
-    const result = await engine.run(["src/index.ts"], { branch: "feat/TK-CHILD" });
+    const result = await engine.run({ files: ["src/index.ts"], branch: "feat/TK-CHILD" });
 
     const fedGuardResult = result.results.find((r) => r.guardId === "federation");
     assert.ok(fedGuardResult, "Federation guard should run");
@@ -214,7 +214,7 @@ describe("DefendEngine: Federation Orchestration (FE.01-04)", () => {
     );
 
     const engine = new DefendEngine(dummyRoot, createMockConfig(true)).use(federationGuard);
-    const result = await engine.run(["src/index.ts"], { branch: "feat/TK-CHILD" });
+    const result = await engine.run({ files: ["src/index.ts"], branch: "feat/TK-CHILD" });
 
     const fedGuardResult = result.results.find((r) => r.guardId === "federation");
     assert.ok(fedGuardResult, "Federation guard should run");
@@ -237,7 +237,7 @@ describe("DefendEngine: Federation Orchestration (FE.01-04)", () => {
 
     // Federation timeout is 50ms (parent takes 2s → will timeout)
     const engine = new DefendEngine(dummyRoot, createMockConfig(true, 50)).use(federationGuard);
-    const result = await engine.run(["src/index.ts"], { branch: "feat/TK-CHILD" });
+    const result = await engine.run({ files: ["src/index.ts"], branch: "feat/TK-CHILD" });
 
     const fedGuardResult = result.results.find((r) => r.guardId === "federation");
     assert.ok(fedGuardResult, "Federation guard should run");

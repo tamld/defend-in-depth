@@ -23,6 +23,7 @@ export type {
   GuardContext,
   GuardResult,
   EngineVerdict,
+  EngineRunOptions,
   Finding,
   DefendConfig,
   TicketRef,

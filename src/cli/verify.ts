@@ -68,7 +68,7 @@ export async function verify(
   const commitMessage = hook === "pre-push" ? getLastCommitMessage(projectRoot) : undefined;
 
   // Run
-  const verdict = await engine.run(files, { branch, commitMessage });
+  const verdict = await engine.run({ files, branch, commitMessage });
 
   // Output
   if (!hookMode) {

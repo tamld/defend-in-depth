@@ -95,7 +95,7 @@ describe("CONTRACT — DefendEngine class shape", () => {
 
   it("exposes .run() that returns a Promise", () => {
     const engine = new DefendEngine(mkProjectRoot(), DEFAULT_CONFIG);
-    const p = engine.run([], {});
+    const p = engine.run({ files: [] });
     assert.ok(p && typeof p.then === "function", ".run() must return a thenable");
     return p; // make sure the test waits on it (no unhandled rejection)
   });
@@ -109,7 +109,7 @@ describe("CONTRACT — EngineVerdict object shape from engine.run()", () => {
     // consumers (CI scripts, hooks, dashboards) can rely on.
     const engine = new DefendEngine(mkProjectRoot(), DEFAULT_CONFIG)
       .use(commitFormatGuard);
-    const verdict = await engine.run([], { commitMessage: "feat: contract test" });
+    const verdict = await engine.run({ files: [], commitMessage: "feat: contract test" });
 
     assert.strictEqual(typeof verdict, "object");
     assert.ok(verdict !== null, "verdict must not be null");
@@ -160,7 +160,7 @@ describe("CONTRACT — GuardResult object shape (per-guard output)", () => {
     const engine = new DefendEngine(mkProjectRoot(), DEFAULT_CONFIG)
       .use(hollowArtifactGuard)
       .use(commitFormatGuard);
-    const verdict = await engine.run([], { commitMessage: "feat: ok" });
+    const verdict = await engine.run({ files: [], commitMessage: "feat: ok" });
 
     assert.strictEqual(verdict.results.length, 2);
     for (const r of verdict.results) {
@@ -176,7 +176,7 @@ describe("CONTRACT — GuardResult object shape (per-guard output)", () => {
   it("Finding objects (when present) have guardId | severity | message", async () => {
     // Force at least one Finding by feeding an obviously bad commit message.
     const engine = new DefendEngine(mkProjectRoot(), DEFAULT_CONFIG).use(commitFormatGuard);
-    const verdict = await engine.run([], { commitMessage: "no type prefix here" });
+    const verdict = await engine.run({ files: [], commitMessage: "no type prefix here" });
     const findings = verdict.results.flatMap((r) => r.findings);
     assert.ok(findings.length >= 1, "expected at least one finding for bad commit message");
 

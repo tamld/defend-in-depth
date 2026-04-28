@@ -15,6 +15,7 @@ import type {
   GuardContext,
   GuardResult,
   EngineVerdict,
+  EngineRunOptions,
   DefendConfig,
   TicketRef,
 } from "./types.js";
@@ -87,27 +88,31 @@ export class DefendEngine {
     return ticketRef;
   }
 
-  /** Run all registered guards and produce a verdict */
-  async run(
-    stagedFiles: string[],
-    options?: { commitMessage?: string; branch?: string },
-  ): Promise<EngineVerdict> {
+  /**
+   * Run all registered guards and produce a verdict.
+   *
+   * v1.0 (#50): accepts a single options object. The legacy positional
+   * `(files, opts)` signature was retired with v0.x — see
+   * `docs/migration/v0-to-v1.md` §6.4 for before/after snippets.
+   */
+  async run(options: EngineRunOptions): Promise<EngineVerdict> {
     const start = performance.now();
+    const { files, commitMessage, branch } = options;
 
     // Phase 1: Extract basic TicketRef from branch/commit/directory (pure, no I/O)
-    const basicRef = this.extractTicketRef(options?.branch, options?.commitMessage, this.projectRoot);
+    const basicRef = this.extractTicketRef(branch, commitMessage, this.projectRoot);
 
     // Phase 2: Enrich with provider (MAY do I/O — file, DB, API)
     const { ticket, provider } = await this.enrichTicketRef(basicRef);
 
     // Phase 2.5: Precompute semantic evaluations (Orchestration I/O)
-    const semanticEvals = await this.enrichSemanticEvals(stagedFiles);
+    const semanticEvals = await this.enrichSemanticEvals(files);
 
     const ctx: GuardContext = {
-      stagedFiles,
+      stagedFiles: files,
       projectRoot: this.projectRoot,
-      commitMessage: options?.commitMessage,
-      branch: options?.branch,
+      commitMessage,
+      branch,
       config: this.config,
       ticket,
       semanticEvals,
