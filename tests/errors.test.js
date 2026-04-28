@@ -171,7 +171,7 @@ describe("DefendEngine — GuardCrashError integration", () => {
       },
     };
     engine.use(crasher);
-    const verdict = await engine.run([], {});
+    const verdict = await engine.run({ files: [] });
 
     const result = verdict.results.find((r) => r.guardId === "crasher");
     assert.ok(result, "crasher result must be present");

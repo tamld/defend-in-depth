@@ -86,7 +86,7 @@ describe("DefendEngine — registration and basic pipeline", () => {
         },
       }),
     ]);
-    const verdict = await engine.run([]);
+    const verdict = await engine.run({ files: [] });
     assert.deepEqual(order, ["a", "b"]);
     assert.equal(verdict.totalGuards, 2);
     assert.equal(verdict.passed, true);
@@ -100,7 +100,7 @@ describe("DefendEngine — registration and basic pipeline", () => {
 
   it("empty pipeline produces verdict with totalGuards=0 and passed=true", async () => {
     const engine = new DefendEngine("/tmp", makeConfig());
-    const verdict = await engine.run([]);
+    const verdict = await engine.run({ files: [] });
     assert.equal(verdict.totalGuards, 0);
     assert.equal(verdict.passed, true);
     assert.equal(verdict.failedGuards, 0);
@@ -127,7 +127,7 @@ describe("DefendEngine — extractTicketRef", () => {
         },
       }),
     );
-    await engine.run([], { branch: "feat/TK-123" });
+    await engine.run({ files: [], branch: "feat/TK-123" });
     assert.equal(captured?.id, "TK-123");
     assert.equal(captured?.type, "feat");
   });
@@ -143,7 +143,7 @@ describe("DefendEngine — extractTicketRef", () => {
         },
       }),
     );
-    await engine.run([], { branch: "bugfix/TK-abc" });
+    await engine.run({ files: [], branch: "bugfix/TK-abc" });
     assert.equal(captured?.id, "TK-ABC");
     assert.equal(captured?.type, undefined);
   });
@@ -159,10 +159,8 @@ describe("DefendEngine — extractTicketRef", () => {
         },
       }),
     );
-    await engine.run([], {
-      branch: "feat/no-id-here",
-      commitMessage: "fix: addresses TK-456",
-    });
+    await engine.run({ files: [], branch: "feat/no-id-here",
+      commitMessage: "fix: addresses TK-456" });
     assert.equal(captured?.id, "TK-456");
   });
 
@@ -177,10 +175,8 @@ describe("DefendEngine — extractTicketRef", () => {
         },
       }),
     );
-    await engine.run([], {
-      branch: "feat/TK-100",
-      commitMessage: "fix: TK-200",
-    });
+    await engine.run({ files: [], branch: "feat/TK-100",
+      commitMessage: "fix: TK-200" });
     assert.equal(captured?.id, "TK-100");
   });
 
@@ -195,7 +191,7 @@ describe("DefendEngine — extractTicketRef", () => {
         },
       }),
     );
-    await engine.run([], { branch: "main" });
+    await engine.run({ files: [], branch: "main" });
     assert.equal(captured?.id, "TK-999");
   });
 
@@ -210,7 +206,7 @@ describe("DefendEngine — extractTicketRef", () => {
         },
       }),
     );
-    await engine.run([], { branch: "main", commitMessage: "fix: x" });
+    await engine.run({ files: [], branch: "main", commitMessage: "fix: x" });
     assert.equal(captured, undefined);
   });
 });
@@ -225,7 +221,7 @@ describe("DefendEngine — guard crash handler", () => {
         },
       }),
     );
-    const verdict = await engine.run([]);
+    const verdict = await engine.run({ files: [] });
     assert.equal(verdict.passed, false);
     assert.equal(verdict.failedGuards, 1);
     const finding = verdict.results[0].findings[0];
@@ -243,7 +239,7 @@ describe("DefendEngine — guard crash handler", () => {
         },
       }),
     );
-    const verdict = await engine.run([]);
+    const verdict = await engine.run({ files: [] });
     assert.equal(verdict.passed, false);
     assert.ok(verdict.results[0].findings[0].message.includes("async-kaboom"));
   });
@@ -258,7 +254,7 @@ describe("DefendEngine — guard crash handler", () => {
         },
       }),
     );
-    const verdict = await engine.run([]);
+    const verdict = await engine.run({ files: [] });
     assert.ok(verdict.results[0].findings[0].message.includes("string-error"));
   });
 
@@ -280,7 +276,7 @@ describe("DefendEngine — guard crash handler", () => {
         },
       }),
     );
-    await engine.run([]);
+    await engine.run({ files: [] });
     assert.equal(secondRan, true);
   });
 });
@@ -321,7 +317,7 @@ describe("DefendEngine — provider failure (enrichTicketRef)", () => {
       }),
     );
 
-    const verdict = await engine.run([], { branch: "feat/TK-CHILD" });
+    const verdict = await engine.run({ files: [], branch: "feat/TK-CHILD" });
     assert.equal(observed?.id, "TK-CHILD"); // basicRef passes through
     assert.equal(verdict.passed, true);
   });
@@ -357,7 +353,7 @@ describe("DefendEngine — provider failure (enrichTicketRef)", () => {
         },
       }),
     );
-    await engine.run([], { branch: "feat/TK-MALFORMED" });
+    await engine.run({ files: [], branch: "feat/TK-MALFORMED" });
     assert.equal(observed?.id, "TK-MALFORMED");
   });
 
@@ -383,7 +379,7 @@ describe("DefendEngine — provider failure (enrichTicketRef)", () => {
       }),
     );
 
-    await engine.run([], { branch: "feat/TK-OFF" });
+    await engine.run({ files: [], branch: "feat/TK-OFF" });
     assert.equal(fetched, false);
     assert.equal(observed?.id, "TK-OFF");
   });
@@ -440,7 +436,7 @@ describe("DefendEngine — parent provider failure (enrichParentTicket)", () => 
       }),
     );
 
-    await engine.run([], { branch: "feat/TK-CHILD" });
+    await engine.run({ files: [], branch: "feat/TK-CHILD" });
     assert.equal(observed?.parentPhase, undefined);
     assert.equal(observed?.authorized, undefined);
   });
@@ -484,7 +480,7 @@ describe("DefendEngine — parent provider failure (enrichParentTicket)", () => 
       }),
     );
     engine.use(stubGuard("noop"));
-    await engine.run([], { branch: "feat/TK-SOLO" });
+    await engine.run({ files: [], branch: "feat/TK-SOLO" });
     assert.equal(parentFetched, false);
   });
 });
@@ -504,7 +500,7 @@ describe("DefendEngine — disabled / unknown guard config", () => {
         },
       }),
     );
-    const verdict = await engine.run([]);
+    const verdict = await engine.run({ files: [] });
     assert.equal(ran, false);
     assert.equal(verdict.totalGuards, 0);
   });
@@ -520,7 +516,7 @@ describe("DefendEngine — disabled / unknown guard config", () => {
         },
       }),
     );
-    await engine.run([]);
+    await engine.run({ files: [] });
     assert.equal(ran, true);
   });
 });
@@ -543,7 +539,7 @@ describe("DefendEngine — verdict aggregation", () => {
         ],
       }),
     ]);
-    const verdict = await engine.run([]);
+    const verdict = await engine.run({ files: [] });
     assert.equal(verdict.totalGuards, 3);
     assert.equal(verdict.passedGuards, 2); // pass + warn (warn still passes)
     assert.equal(verdict.warnedGuards, 1); // only the warn-with-findings
@@ -562,7 +558,7 @@ describe("DefendEngine — verdict aggregation", () => {
         ],
       }),
     );
-    const verdict = await engine.run([]);
+    const verdict = await engine.run({ files: [] });
     assert.equal(verdict.warnedGuards, 0);
     assert.equal(verdict.failedGuards, 1);
   });
@@ -610,7 +606,7 @@ describe("DefendEngine — DSPy semantic eval enrichment", () => {
         },
       }),
     );
-    await engine.run([target]);
+    await engine.run({ files: [target] });
     assert.ok(observed?.dspy);
     assert.deepEqual(observed.dspy[target], { score: 0.42, feedback: "looks fine" });
   });
@@ -645,7 +641,7 @@ describe("DefendEngine — DSPy semantic eval enrichment", () => {
         },
       }),
     );
-    await engine.run([target]);
+    await engine.run({ files: [target] });
     // Either the file got an entry of null, or no entry at all (depending on DSPy client behavior).
     // Both are acceptable degraded modes — assert we did not throw and pipeline produced semanticEvals.
     assert.ok(observed?.dspy);
@@ -676,7 +672,7 @@ describe("DefendEngine — DSPy semantic eval enrichment", () => {
       }),
     );
     engine.use(stubGuard("noop"));
-    await engine.run(["code.ts"]);
+    await engine.run({ files: ["code.ts"] });
     assert.equal(fetched, false);
   });
 
@@ -694,7 +690,7 @@ describe("DefendEngine — DSPy semantic eval enrichment", () => {
         },
       }),
     );
-    await engine.run([]);
+    await engine.run({ files: [] });
     assert.equal(observed, undefined);
   });
 });

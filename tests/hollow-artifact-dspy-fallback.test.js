@@ -92,7 +92,7 @@ describe("DSPy fallback — Scenario 1: endpoint unreachable", () => {
     );
     engine.use(hollowArtifactGuard);
 
-    const verdict = await engine.run(["hollow.md"]);
+    const verdict = await engine.run({ files: ["hollow.md"] });
 
     assert.equal(verdict.passed, false, "L1 must BLOCK on TODO regardless of DSPy state");
     const blocking = verdict.results
@@ -123,7 +123,7 @@ describe("DSPy fallback — Scenario 1: endpoint unreachable", () => {
       },
     });
 
-    await engine.run(["doc.md"]);
+    await engine.run({ files: ["doc.md"] });
 
     assert.ok(observed?.dspy, "engine must populate semanticEvals.dspy even on failure");
     assert.equal(observed.dspy["doc.md"], null, "unreachable DSPy ⇒ null entry");
@@ -162,7 +162,7 @@ describe("DSPy fallback — Scenario 2: endpoint returns HTTP 500", () => {
     });
     engine.use(hollowArtifactGuard);
 
-    const verdict = await engine.run(["doc.md"]);
+    const verdict = await engine.run({ files: ["doc.md"] });
 
     assert.equal(verdict.passed, true, "no BLOCK should arise from DSPy 500");
     assert.ok(observed?.dspy, "semanticEvals.dspy must be populated");
@@ -197,7 +197,7 @@ describe("DSPy fallback — Scenario 3: low semantic score", () => {
     );
     engine.use(hollowArtifactGuard);
 
-    const verdict = await engine.run(["doc.md"]);
+    const verdict = await engine.run({ files: ["doc.md"] });
 
     const findings = verdict.results.flatMap((r) => r.findings);
     const warns = findings.filter((f) => f.severity === Severity.WARN);

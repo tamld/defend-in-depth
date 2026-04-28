@@ -66,6 +66,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Engine guard-crash handling** now constructs a typed `GuardCrashError` (with `.guardId` and `.cause`) before recording the BLOCK finding. The legacy `"Guard crashed: …"` finding-message prefix is preserved (pinned by `tests/engine.test.js`), so consumers reading the `Finding.message` are unaffected; consumers who want the typed cause now have a stable contract for it.
 - **Ticket-provider warnings** (`FileTicketProvider`, `HttpTicketProvider`) are now constructed via `ProviderError` so the warning text has a stable shape. Providers still NEVER throw — the federation graceful-degradation contract is preserved (pinned by `tests/contract/public-api-contract.test.js`).
 
+### Changed (engine.run options object — #50, BREAKING)
+- **`DefendEngine.run()` now accepts a single options object** of type `EngineRunOptions { files: string[]; mode?; commitMessage?; branch?; dryRun? }`. v0.x took positional `(stagedFiles, options?)` — that signature is removed. Library consumers must rewrite call sites; the legacy positional form will not type-check. `mode` and `dryRun` are accepted on the type but **not yet wired** to runtime behaviour — they are reserved slots for future full-scan / patch / dry-run modes (also #50). See `docs/migration/v0-to-v1.md` §6.4 for before/after snippets.
+- **`EngineRunOptions` type** is exported from the library barrel (`defense-in-depth`) alongside the existing `EngineVerdict`, `Guard`, `GuardContext`, etc. Plugin authors and embedders should import it instead of inlining the option shape.
+
 ### Migration
 
 No code or config changes are required for users on v0.6.0. The Composite
@@ -78,6 +82,12 @@ v0.x users who relied on silent warn-and-fallback should wrap `loadConfig`
 in `try/catch` and branch on `err instanceof ConfigError` /
 `err.code === "DID_CONFIG_INVALID"`. See
 `docs/migration/v0-to-v1.md#error-handling` for before/after snippets.
+
+The `engine.run()` signature change is a **clean break** with no shim. Every
+call site needs updating from `engine.run(files, { branch, commitMessage })`
+to `engine.run({ files, branch, commitMessage })`. CLI users (`npx
+defense-in-depth verify`) are unaffected — the CLI was migrated in the same
+PR. See `docs/migration/v0-to-v1.md` §6.4.
 
 ---
 
