@@ -34,14 +34,13 @@ After v1.0 GA, every change on these surfaces follows the bump rules in [SEMVER.
 
 ## 2. Breaking Changes in v1.0
 
-**There are no source-level breaking changes between the last v0.7-rc.1 and v1.0.0.** Every change required to land v1.0 was either additive or a no-behaviour-change refactor with verified zero callers.
-
-The two refactors landing in the v1.0 lane that *could* surprise a consumer who was reaching past the public surface:
+The v1.0 lane intentionally locks the public surface for the long haul, so it picks up two genuine breaking changes on top of the additive v0.7-rc.1 base:
 
 1. **`Severity` is no longer re-exported from `src/core/engine.ts`.** It is exported from `src/index.ts` (the barrel) and from `src/core/types.ts` (the SSoT). If you have an import like `import { Severity } from "defense-in-depth/dist/core/engine.js"`, switch it to `import { Severity } from "defense-in-depth"`. See [PR #56](https://github.com/tamld/defense-in-depth/pull/56) for the zero-caller audit and rationale.
 2. **`defense.config.yml` requires `version: "1"`.** The field has been required since v0.1; v1.0 keeps it as `"1"`. If you are migrating from an *internal-fork pre-v0.1 build* that had no `version:` field, add `version: "1"` at the top of the file. Public v0.1.0 already requires this, so npm-installed consumers are not affected.
+3. **`loadConfig()` now throws `ConfigError` on invalid configs.** v0.x silently warned and returned `DEFAULT_CONFIG`. v1.0 surfaces the failure as a typed exception so library consumers stop running with a config they did not intend. The zero-config path (no `defense.config.yml` present) is unchanged. See [§ Error handling](#error-handling) for before/after snippets.
 
-If your install is anywhere between v0.1.0 and v0.7-rc.1, v1.0 itself adds nothing breaking. The reason this guide is long is that **v0.1.0 → v1.0 spans every feature shipped in v0.2 → v0.7-rc.1**, and you should know what landed before you upgrade.
+Apart from item (3), if your install is anywhere between v0.1.0 and v0.7-rc.1 v1.0 itself adds nothing else breaking. The reason this guide is long is that **v0.1.0 → v1.0 spans every feature shipped in v0.2 → v0.7-rc.1**, and you should know what landed before you upgrade.
 
 ---
 
@@ -219,6 +218,71 @@ The `Guard` interface has been stable since v0.1. The `GuardContext.semanticEval
 ### 6.3 Custom provider authors
 
 `TicketStateProvider` has been stable since v0.3. v0.6 adds optional `parentId`, `parentPhase`, `authorized` fields to `TicketRef`; if your provider can resolve a parent, populate them. Otherwise, return what you have — the federation guard tolerates partial state.
+
+### 6.4 Error handling — typed errors (v1.0, BREAKING) <a id="error-handling"></a>
+
+v1.0 introduces a typed error hierarchy so library consumers can branch on a stable `.code` instead of parsing `.message`. The hierarchy is:
+
+```
+DiDError                         (base — extends Error; .code: string)
+├── ConfigError                  (code: "DID_CONFIG_INVALID"; .configPath?)
+├── GuardCrashError              (code: "DID_GUARD_CRASH";   .guardId)
+└── ProviderError                (code: "DID_PROVIDER_FAIL"; .providerName)
+```
+
+All four classes are exported from the barrel and from a new `defense-in-depth/errors` subpath:
+
+```typescript
+import {
+  DiDError,
+  ConfigError,
+  GuardCrashError,
+  ProviderError,
+  ErrorCodes,        // { CONFIG_INVALID, GUARD_CRASH, PROVIDER_FAIL }
+} from "defense-in-depth";
+// or, equivalently:
+import { ConfigError } from "defense-in-depth/errors";
+```
+
+Every subclass preserves the underlying error on `.cause` so telemetry consumers can keep the original stack trace.
+
+#### `loadConfig()` — was warn-and-default, is now throw
+
+This is the only behavioural break in the typed-error change set.
+
+**Before (v0.x):**
+
+```typescript
+import { loadConfig } from "defense-in-depth";
+const cfg = loadConfig(projectRoot); // bad YAML → console.warn, returns DEFAULT_CONFIG
+```
+
+**After (v1.0):**
+
+```typescript
+import { loadConfig, ConfigError } from "defense-in-depth";
+try {
+  const cfg = loadConfig(projectRoot);
+} catch (err) {
+  if (err instanceof ConfigError) {
+    // err.code === "DID_CONFIG_INVALID"
+    // err.configPath, err.cause, err.message all available
+    process.stderr.write(`Bad config at ${err.configPath}: ${err.message}\n`);
+    process.exit(1);
+  }
+  throw err;
+}
+```
+
+The zero-config path is unchanged: if `defense.config.yml` (or any of the other accepted file names) is missing, `loadConfig()` still returns `DEFAULT_CONFIG` without throwing.
+
+#### Engine guard crashes — typed cause, same finding shape
+
+The engine still records a BLOCK finding with the legacy `"Guard crashed: …"` message prefix when a guard's `check()` throws — that contract is pinned by `tests/engine.test.js`. v1.0 additionally constructs a typed `GuardCrashError` (with `.guardId` and `.cause`) inside the engine, so consumers wiring telemetry around the pipeline can rely on a stable typed surface for the cause. No call-site changes are required for users reading `verdict.results[*].findings[*].message`.
+
+#### Ticket providers — same warn-and-degrade contract
+
+`FileTicketProvider` and `HttpTicketProvider` still NEVER throw to the caller (this is the federation graceful-degradation contract pinned by `tests/contract/public-api-contract.test.js`). v1.0 wraps their failure messages in a `ProviderError` instance for shape stability, but the public observable is identical: provider returns `undefined`, engine warns to stderr, pipeline continues.
 
 ---
 

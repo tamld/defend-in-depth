@@ -29,6 +29,7 @@ import * as path from "node:path";
 import * as yaml from "yaml";
 import type { TicketStateProvider } from "./types.js";
 import type { TicketRef } from "../core/types.js";
+import { ProviderError } from "../core/errors.js";
 
 /** Configuration options for FileTicketProvider */
 export interface FileProviderConfig {
@@ -88,11 +89,16 @@ export class FileTicketProvider implements TicketStateProvider {
       if ((err as NodeJS.ErrnoException).code === "ENOENT") {
         return undefined; // File missing → silent skip
       }
-      
-      // Parse or other errors → warn but don't crash
-      console.warn(
-        `⚠ FileTicketProvider: Failed to read ${this.ticketFile}: ${err instanceof Error ? err.message : String(err)}`,
+
+      // Parse or other errors → warn but don't crash. Wrap in a typed
+      // ProviderError so the warn message has a stable shape and the
+      // cause is preserved for telemetry consumers.
+      const providerErr = new ProviderError(
+        `FileTicketProvider: Failed to read ${this.ticketFile}: ${err instanceof Error ? err.message : String(err)}`,
+        this.name,
+        err,
       );
+      console.warn(`⚠ ${providerErr.message}`);
       return undefined;
     }
   }
@@ -115,8 +121,13 @@ export class FileTicketProvider implements TicketStateProvider {
         return undefined;
       }
       return parsed as Record<string, unknown>;
-    } catch {
-      console.warn(`⚠ FileTicketProvider: Invalid YAML frontmatter in ${this.ticketFile}`);
+    } catch (err) {
+      const providerErr = new ProviderError(
+        `FileTicketProvider: Invalid YAML frontmatter in ${this.ticketFile}`,
+        this.name,
+        err,
+      );
+      console.warn(`⚠ ${providerErr.message}`);
       return undefined;
     }
   }

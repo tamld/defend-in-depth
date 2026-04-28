@@ -104,6 +104,34 @@ test("subpath exports — package self-referencing (issue #36)", async (t) => {
     );
   });
 
+  await t.test("'defense-in-depth/errors' exposes the typed error hierarchy", async () => {
+    const errors = await import("defense-in-depth/errors");
+    assert.strictEqual(typeof errors.DiDError, "function", "DiDError class");
+    assert.strictEqual(typeof errors.ConfigError, "function", "ConfigError class");
+    assert.strictEqual(typeof errors.GuardCrashError, "function", "GuardCrashError class");
+    assert.strictEqual(typeof errors.ProviderError, "function", "ProviderError class");
+    assert.strictEqual(typeof errors.ErrorCodes, "object", "ErrorCodes table");
+
+    // Subclass relationships hold across the subpath barrier.
+    assert.ok(
+      Object.getPrototypeOf(errors.ConfigError) === errors.DiDError,
+      "ConfigError must extend DiDError",
+    );
+    assert.ok(
+      Object.getPrototypeOf(errors.GuardCrashError) === errors.DiDError,
+      "GuardCrashError must extend DiDError",
+    );
+    assert.ok(
+      Object.getPrototypeOf(errors.ProviderError) === errors.DiDError,
+      "ProviderError must extend DiDError",
+    );
+
+    // Code constants are stable strings (part of the v1.0 surface).
+    assert.strictEqual(errors.ErrorCodes.CONFIG_INVALID, "DID_CONFIG_INVALID");
+    assert.strictEqual(errors.ErrorCodes.GUARD_CRASH, "DID_GUARD_CRASH");
+    assert.strictEqual(errors.ErrorCodes.PROVIDER_FAIL, "DID_PROVIDER_FAIL");
+  });
+
   await t.test("identical symbol resolves to identical object across subpaths", async () => {
     // Severity is exposed both via the root barrel AND via the /types subpath.
     // They MUST be the same runtime object — otherwise consumers comparing
