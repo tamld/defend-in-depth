@@ -53,6 +53,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **CI dogfooding** (`ci.yml`) — removed the `|| true` swallow on `Self-verify`. Step is now an honest CLI smoke test; meaningful diff-based dogfooding is a follow-up that requires a repo-local `defense.config.yml` tuned for self-application.
 - **SECURITY.md supported versions** — corrected from `0.1.x` to `0.6.x` to match the current minor line.
 
+### Refactor
+- **Shared `src/core/jsonl-store.ts`** (#43, T1) — extracted the duplicated append-only JSONL primitives (id-based dedupe, time-window dedupe, line-by-line reader, malformed-line tolerance) from `feedback.ts` and `lesson-outcome.ts` into a single typed factory. Adds runtime field-by-field validation that replaces the previous `JSON.parse(line) as T` casts (Antigravity finding #4 on PR #32). External signatures of `appendFeedback`, `appendRecall`, `appendOutcome`, `readFeedback`, `readRecalls`, `readOutcomes` are unchanged — purely an implementation detail that is pinned by the contract tests added in #35. Patch-class per `docs/SEMVER.md` §4.
+
 ### Migration
 
 No code or config changes are required for users on v0.6.0. The Composite
