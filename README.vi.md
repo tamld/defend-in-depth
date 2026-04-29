@@ -239,6 +239,7 @@ defense-in-depth init --scaffold
 # .agents/rules/           — Quy tắc bất di bất dịch của dự án
 # .agents/workflows/       — Quy trình thao tác
 # .agents/skills/          — Bộ kỹ năng (skill template)
+# .agents/config/          — Cấu hình đọc-được-bằng-máy
 # .agents/contracts/       — Hợp đồng interface
 ```
 

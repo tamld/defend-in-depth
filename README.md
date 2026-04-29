@@ -35,7 +35,7 @@ unstructured commits.*<br/>
 
 > [!NOTE]
 > **defense-in-depth ships an opinionated scaffold, not a turnkey solution.**
-> The guard pipeline (8 built-in guards + `Guard` interface) is the **core**.
+> The guard pipeline (9 built-in guards + `Guard` interface) is the **core**.
 > The `.agents/` ecosystem (19 rules, COGNITIVE_TREE, skill templates) is a
 > **starting point**: fork it, delete what doesn't fit, replace it with your
 > own conventions. `npx defense-in-depth init` gives you the hooks; `init
