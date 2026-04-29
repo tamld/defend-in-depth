@@ -168,7 +168,7 @@ AI Agent tối ưu cho **sự hợp lý**, không phải **sự đúng đắn**.
 
 | Lỗi hành vi | Hiện tượng | Hậu quả |
 |:---|:---|:---|
-| 🎭 **Artifact rỗng** | File chỉ chứa `TODO`, `TBD`, template trống | Lọt qua gate nhưng không có nội dung thực |
+| 🎭 **Artifact rỗng** | File chỉ chứa các marker chưa hoàn thiện, template trống | Lọt qua gate nhưng không có nội dung thực |
 | 🦠 **Xâm phạm SSoT** | Sửa file cấu hình/quản trị trong lúc viết tính năng | Hỏng trạng thái, lệch dữ liệu |
 | 🤡 **Commit bừa** | Commit message tự do, branch đặt tên ngẫu nhiên | Lịch sử khó đọc, không kiểm soát được |
 | 📝 **Bỏ qua thiết kế** | Code trước, lập kế hoạch sau | Lệch kiến trúc, gây regression |
@@ -278,7 +278,7 @@ Ghép thêm branch-protection rule trên `main` yêu cầu check `verify` phải
 
 | Guard | Mặc định | Mức độ | Hook | Bắt được gì |
 |:---|:---:|:---:|:---:|:---|
-| **Hollow Artifact** | ✅ Bật | BLOCK | pre-commit | File chỉ chứa `TODO`, `TBD`, template rỗng |
+| **Hollow Artifact** | ✅ Bật | BLOCK | pre-commit | File chỉ chứa các marker chưa hoàn thiện hoặc template rỗng |
 | **SSoT Pollution** | ✅ Bật | BLOCK | pre-commit | File quản trị / state (`.agents/**`, `flow_state.yml`, `backlog.yml`) bị sửa trong feature branch |
 | **Root Pollution** | ✅ Bật | BLOCK | pre-commit | File hoặc thư mục lạ tạo ngay ở thư mục gốc |
 | **Commit Format** | ✅ Bật | WARN | commit-msg | Commit message không tuân theo Conventional Commits |
@@ -498,7 +498,7 @@ Với các **dự án agentic** (dự án có AI Agent đóng góp code), defens
 | Thành phần | Bắt buộc? | Mục đích |
 |:---|:---:|:---|
 | **Rules** | ✅ Lõi | Chuẩn dự án không thể thương lượng |
-| **Contracts** | ✅ Lõi | Spec interface Guard (cho cả người và máy) |
+| **Contracts/Templates** | ✅ Lõi | Spec interface Guard (cho cả người và máy) |
 | **Config** | ✅ Lõi | Registry guard đọc-được-bằng-máy |
 | **Workflows** | Tuỳ chọn | Quy trình từng bước cho task |
 | **Skills** | Tuỳ chọn | Năng lực Agent tuỳ chỉnh |
@@ -552,10 +552,10 @@ Các công cụ trên quản trị AI **trong lúc suy luận**. defense-in-dept
 | **v0.6** | Federation: guard parent ↔ child + `HitlReview` | `FederationGuardConfig`, `HttpTicketProvider`, `HitlReviewConfig` | ✅ Xong |
 | **v0.6.2** | Test & Operational Hardening (coverage gate, E2E test, server-side composite Action) | — | ✅ Xong |
 | **v0.7-rc.1** | Path A memory loop MVP + Progressive Discovery hints | `Hint`, `HintState`, `LessonOutcome`, `RecallMetric`, `RecallEvent`, `FeedbackEvent`, `GuardF1Metric` | ✅ Tag 2026-04-27 (PR [#27](https://github.com/tamld/defense-in-depth/pull/27), [#28](https://github.com/tamld/defense-in-depth/pull/28), [#31](https://github.com/tamld/defense-in-depth/pull/31)) |
-| **Track A1** — đồng bộ docs (trạng thái v0.7 trên README + STRATEGY + meta-architecture + bản đồ hệ sinh thái) | Release engineering | — | ✅ Xong ([#40](https://github.com/tamld/defense-in-depth/issues/40), [#52](https://github.com/tamld/defense-in-depth/pull/52), [#53](https://github.com/tamld/defense-in-depth/issues/53)) |
-| **Track A2** — mở rộng độ phủ guard (`secret-detection`, `dependency-audit`, `file-size-limit`) | Guard mới | Config guard mới | 🔄 Đang triển khai ([#41](https://github.com/tamld/defense-in-depth/issues/41), `git-shield.yml` CI fail-safe đã land tại [#46](https://github.com/tamld/defense-in-depth/pull/46)) |
-| **Track A3** — đóng băng API cho v1.0 (subpath exports, contract tests, typed errors, options-object engine, Guard lifecycle hooks, JSON Schema config, custom-guard guide) | API surface | `EngineRunOptions`, phân cấp `DiDError` | 🔄 Đang triển khai — P0 ✅ ([#33](https://github.com/tamld/defense-in-depth/issues/33), [#34](https://github.com/tamld/defense-in-depth/issues/34)); P1 một phần — [#35](https://github.com/tamld/defense-in-depth/issues/35)/[#36](https://github.com/tamld/defense-in-depth/issues/36)/[#37](https://github.com/tamld/defense-in-depth/issues/37)/[#43](https://github.com/tamld/defense-in-depth/issues/43)/[#44](https://github.com/tamld/defense-in-depth/issues/44)/[#49](https://github.com/tamld/defense-in-depth/issues/49)/[#50](https://github.com/tamld/defense-in-depth/issues/50)/[#59](https://github.com/tamld/defense-in-depth/issues/59) ✅; còn [#38](https://github.com/tamld/defense-in-depth/issues/38)/[#39](https://github.com/tamld/defense-in-depth/issues/39) |
-| **Track A4** — bake 30 ngày trên `next` → promo `npm latest` + push adoption | Release lifecycle | — | 📋 Chờ Track A3 đóng (umbrella [#42](https://github.com/tamld/defense-in-depth/issues/42)) |
+| **Track A1** — đồng bộ docs (trạng thái v0.7 trên README + STRATEGY + meta-architecture + bản đồ hệ sinh thái) | Phát hành kỹ thuật | — | ✅ Xong ([#40](https://github.com/tamld/defense-in-depth/issues/40), [#52](https://github.com/tamld/defense-in-depth/pull/52), [#53](https://github.com/tamld/defense-in-depth/issues/53)) |
+| **Track A2** — mở rộng độ phủ guard (`secret-detection`, `dependency-audit`, `file-size-limit`) | Guard mới | Config guard mới | ✅ Xong ([#41](https://github.com/tamld/defense-in-depth/issues/41), `git-shield.yml` CI fail-safe đã land tại [#46](https://github.com/tamld/defense-in-depth/pull/46)) |
+| **Track A3** — đóng băng API cho v1.0 (subpath exports, contract tests, typed errors, options-object engine, Guard lifecycle hooks, JSON Schema config, custom-guard guide) | API surface | `EngineRunOptions`, phân cấp `DiDError` | ✅ Xong ([#33](https://github.com/tamld/defense-in-depth/issues/33), [#34](https://github.com/tamld/defense-in-depth/issues/34), [#35](https://github.com/tamld/defense-in-depth/issues/35), [#36](https://github.com/tamld/defense-in-depth/issues/36), [#37](https://github.com/tamld/defense-in-depth/issues/37), [#43](https://github.com/tamld/defense-in-depth/issues/43), [#44](https://github.com/tamld/defense-in-depth/issues/44), [#49](https://github.com/tamld/defense-in-depth/issues/49), [#50](https://github.com/tamld/defense-in-depth/issues/50), [#59](https://github.com/tamld/defense-in-depth/issues/59)) |
+| **Track A4** — bake 30 ngày trên `next` → promo `npm latest` + push adoption | Chu kỳ phát hành | — | 📋 Chờ Track A3 đóng (umbrella [#42](https://github.com/tamld/defense-in-depth/issues/42)) |
 | **v1.0** | API ổn định + GA `npm latest` | Mọi type được đóng băng theo [`docs/SEMVER.md`](docs/SEMVER.md) | 📋 Lên kế hoạch (sau khi Track A4 đóng) |
 | **v1.1.x — Track B (Meta Growth)** | F1 aggregator + Án Lệ injection + dedup + forgetting + quality gate. **Hard-gated** sau khi Track A4 đóng (≥10 user ngoài + ≥100 sự kiện). | `MetaGrowthSnapshot` | 📋 Đã thiết kế |
 | **v1.2+ — Telemetry Sync** *(trước đây từng đánh số "v0.9"; renumber sau v1.0 theo [`docs/vision/meta-growth-roadmap.md`](docs/vision/meta-growth-roadmap.md))* | Luồng dữ liệu hai chiều Internal ↔ OSS | `FederationPayload` | 📋 Đã thiết kế |
@@ -598,7 +598,7 @@ Bạn đang bước vào một **codebase được quản trị** với các fra
 
 > [!CAUTION]
 > **3 ĐẠO LUẬT TUYỆT ĐỐI**
-> 1. **Zero-Theater:** KHÔNG tạo doc rỗng. `TODO`, template trống = BLOCK ngay.
+> 1. **Zero-Theater:** KHÔNG tạo doc rỗng. Marker chưa hoàn thiện, template trống = BLOCK ngay.
 > 2. **Bằng chứng vượt trên hợp lý:** Gắn nhãn các tuyên bố chưa kiểm chứng là `[HYPO]`. Chỉ bằng chứng `[CODE]` và `[RUNTIME]` mới qua được peer review.
 > 3. **Bootstrap trước:** Theo chain — `AGENTS.md` → `.agents/AGENTS.md` → `.agents/rules/rule-consistency.md` → rồi mới code.
 

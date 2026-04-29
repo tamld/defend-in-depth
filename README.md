@@ -172,7 +172,7 @@ AI agents optimize for **plausibility**, not **correctness**. Without guardrails
 
 | Failure Mode | What Happens | Business Impact |
 |:---|:---|:---|
-| 🎭 **Hollow Artifacts** | Files with `TODO`, `TBD`, empty templates | Workflow gates pass with zero substance |
+| 🎭 **Hollow Artifacts** | Files with incomplete markers, empty templates | Workflow gates pass with zero substance |
 | 🦠 **SSoT Pollution** | Governance/config files modified during feature work | State corruption, drift |
 | 🤡 **Cowboy Commits** | Free-form commit messages, random branches | Unreadable, unauditable history |
 | 📝 **Plan Bypass** | Code before planning | Architecture drift, regressions |
@@ -285,7 +285,7 @@ Combine this with branch-protection rules on `main` that require the
 
 | Guard | Default | Severity | Hook | What It Catches |
 |:---|:---:|:---:|:---:|:---|
-| **Hollow Artifact** | ✅ ON | BLOCK | pre-commit | Files with only `TODO`, `TBD`, empty templates |
+| **Hollow Artifact** | ✅ ON | BLOCK | pre-commit | Files with only incomplete markers or empty templates |
 | **SSoT Pollution** | ✅ ON | BLOCK | pre-commit | Governance / state files (`.agents/**`, `flow_state.yml`, `backlog.yml`) modified in feature branches |
 | **Root Pollution** | ✅ ON | BLOCK | pre-commit | Unapproved files or folders created in the project root |
 | **Commit Format** | ✅ ON | WARN | commit-msg | Non-conventional commit messages |
@@ -503,7 +503,7 @@ For **agentic projects** (projects where AI agents contribute code), defense-in-
 | Component | Required? | Purpose |
 |:---|:---:|:---|
 | **Rules** | ✅ Core | Non-negotiable project standards |
-| **Contracts** | ✅ Core | Guard interface spec (human + machine) |
+| **Contracts/Templates** | ✅ Core | Guard interface spec (human + machine) |
 | **Config** | ✅ Core | Machine-readable guard registry |
 | **Workflows** | Optional | Step-by-step procedures for tasks |
 | **Skills** | Optional | Custom agent capabilities |
@@ -558,8 +558,8 @@ These tools govern AI **while it reasons**. defense-in-depth governs AI **when i
 | **v0.6.2** | Test & Operational Hardening (Coverage gates, End-to-End tests, server-side composite Action) | — | ✅ Done |
 | **v0.7-rc.1** | Path A memory loop MVP + Progressive Discovery hints | `Hint`, `HintState`, `LessonOutcome`, `RecallMetric`, `RecallEvent`, `FeedbackEvent`, `GuardF1Metric` | ✅ Tagged 2026-04-27 (PRs [#27](https://github.com/tamld/defense-in-depth/pull/27), [#28](https://github.com/tamld/defense-in-depth/pull/28), [#31](https://github.com/tamld/defense-in-depth/pull/31)) |
 | **Track A1** — docs reconcile (v0.7 status across README + STRATEGY + meta-architecture + ecosystem map) | Release engineering | — | ✅ Done ([#40](https://github.com/tamld/defense-in-depth/issues/40), [#52](https://github.com/tamld/defense-in-depth/pull/52), [#53](https://github.com/tamld/defense-in-depth/issues/53)) |
-| **Track A2** — guard breadth bump (`secret-detection`, `dependency-audit`, `file-size-limit`) | New guards | New per-guard configs | 🔄 In flight ([#41](https://github.com/tamld/defense-in-depth/issues/41), `git-shield.yml` CI fail-safe landed in [#46](https://github.com/tamld/defense-in-depth/pull/46)) |
-| **Track A3** — API freeze for v1.0 (subpath exports, contract tests, typed errors, options-object engine, Guard lifecycle hooks, JSON Schema config, custom-guard guide) | API surface | `EngineRunOptions`, `DiDError` hierarchy | 🔄 In flight — P0 ✅ ([#33](https://github.com/tamld/defense-in-depth/issues/33), [#34](https://github.com/tamld/defense-in-depth/issues/34)); P1 partial — [#35](https://github.com/tamld/defense-in-depth/issues/35)/[#36](https://github.com/tamld/defense-in-depth/issues/36)/[#37](https://github.com/tamld/defense-in-depth/issues/37)/[#43](https://github.com/tamld/defense-in-depth/issues/43)/[#44](https://github.com/tamld/defense-in-depth/issues/44)/[#49](https://github.com/tamld/defense-in-depth/issues/49)/[#50](https://github.com/tamld/defense-in-depth/issues/50)/[#59](https://github.com/tamld/defense-in-depth/issues/59) ✅; [#38](https://github.com/tamld/defense-in-depth/issues/38)/[#39](https://github.com/tamld/defense-in-depth/issues/39) remaining |
+| **Track A2** — guard breadth bump (`secret-detection`, `dependency-audit`, `file-size-limit`) | New guards | New per-guard configs | ✅ Done ([#41](https://github.com/tamld/defense-in-depth/issues/41), `git-shield.yml` CI fail-safe landed in [#46](https://github.com/tamld/defense-in-depth/pull/46)) |
+| **Track A3** — API freeze for v1.0 (subpath exports, contract tests, typed errors, options-object engine, Guard lifecycle hooks, JSON Schema config, custom-guard guide) | API surface | `EngineRunOptions`, `DiDError` hierarchy | ✅ Done ([#33](https://github.com/tamld/defense-in-depth/issues/33), [#34](https://github.com/tamld/defense-in-depth/issues/34), [#35](https://github.com/tamld/defense-in-depth/issues/35), [#36](https://github.com/tamld/defense-in-depth/issues/36), [#37](https://github.com/tamld/defense-in-depth/issues/37), [#43](https://github.com/tamld/defense-in-depth/issues/43), [#44](https://github.com/tamld/defense-in-depth/issues/44), [#49](https://github.com/tamld/defense-in-depth/issues/49), [#50](https://github.com/tamld/defense-in-depth/issues/50), [#59](https://github.com/tamld/defense-in-depth/issues/59)) |
 | **Track A4** — 30-day bake on `next` → `npm latest` promo + adoption push | Release lifecycle | — | 📋 Pending Track A3 exit (umbrella [#42](https://github.com/tamld/defense-in-depth/issues/42)) |
 | **v1.0** | Stable API + `npm latest` GA | All types frozen per [`docs/SEMVER.md`](docs/SEMVER.md) | 📋 Planned (Track A4 exit) |
 | **v1.1.x — Track B (Meta Growth)** | F1 aggregator + Án Lệ injection + dedup + forgetting + quality gate. **Hard-gated** on Track A4 exit (≥10 external users + ≥100 captured events). | `MetaGrowthSnapshot` | 📋 Designed |
@@ -603,7 +603,7 @@ You are entering a **governed codebase** with prebuilt cognitive frameworks.
 
 > [!CAUTION]
 > **THE 3 ABSOLUTE LAWS**
-> 1. **Zero-Theater:** DO NOT create hollow documentation. `TODO`, empty templates = instant BLOCK.
+> 1. **Zero-Theater:** DO NOT create hollow documentation. Incomplete markers, empty templates = instant BLOCK.
 > 2. **Evidence Over Plausibility:** Tag unverified claims as `[HYPO]`. Only `[CODE]` and `[RUNTIME]` evidence passes peer review.
 > 3. **Bootstrap First:** Follow the chain: `AGENTS.md` → `.agents/AGENTS.md` → `.agents/rules/rule-consistency.md` → then start coding.
 
